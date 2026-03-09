@@ -14,6 +14,7 @@ export default function Home() {
     const { state, generate, resume, createBranch, stop } = useStoryStream();
     const [prompt, setPrompt] = useState("");
     const [template, setTemplate] = useState<PipelineTemplate>("default");
+    const [showPipeline, setShowPipeline] = useState(false);
 
     const handleGenerate = () => {
         if (!prompt.trim()) return;
@@ -123,8 +124,26 @@ export default function Home() {
                     {/* Header row: Status + Stop */}
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "24px", maxWidth: "1200px", margin: "0 auto", width: "100%" }}>
 
-                        <div style={{ flex: 1 }}>
-                            <PipelineVisualizer nodes={state.pipeline_nodes} />
+                        <div style={{ flex: 1, display: "flex", gap: "16px", alignItems: "center" }}>
+                            <button
+                                className="btn-gold"
+                                onClick={() => setShowPipeline(true)}
+                                style={{ padding: "8px 16px", fontSize: "13px" }}
+                            >
+                                <span style={{ fontSize: "16px" }}>🧠</span> View Agent Flow
+                            </button>
+
+                            {isGenerating && (
+                                <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--gold-primary)", letterSpacing: "0.1em", textTransform: "uppercase" }} className="animate-pulse">
+                                    Agents are working...
+                                </span>
+                            )}
+
+                            <PipelineVisualizer
+                                nodes={state.pipeline_nodes}
+                                isOpen={showPipeline}
+                                onClose={() => setShowPipeline(false)}
+                            />
                         </div>
 
                         <button

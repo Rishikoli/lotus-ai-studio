@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { StoryPanel as StoryPanelType } from "../types";
 import { MoreVerticalCircle01Icon, GitBranchIcon } from "hugeicons-react";
+import SceneCanvas from "./SceneCanvas";
 
 interface StoryPanelProps {
     panel: StoryPanelType;
@@ -68,48 +69,12 @@ export default function StoryPanel({ panel, sessionId, onBranch, isBranch }: Sto
                 </div>
             )}
 
-            {/* Image */}
+            {/* Image & Animation Layers */}
             {panel.is_loading && !panel.image_url ? (
                 <div className="shimmer" style={{ position: "absolute", inset: 0 }} />
             ) : panel.image_url ? (
-                <img
-                    src={panel.image_url}
-                    alt={`Panel ${panel.id}`}
-                    style={{
-                        position: "absolute",
-                        inset: 0,
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                    }}
-                />
+                <SceneCanvas panel={panel} />
             ) : null}
-
-            {/* Emotion lighting overlay */}
-            <div
-                style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: emotionOverlay,
-                    zIndex: 1,
-                    pointerEvents: "none",
-                }}
-            />
-
-            {/* Scene physics overlay: rain, grain */}
-            {panel.physics?.includes("rain") && (
-                <div
-                    style={{
-                        position: "absolute",
-                        inset: 0,
-                        zIndex: 2,
-                        backgroundImage: "repeating-linear-gradient(transparent 0px, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 3px)",
-                        backgroundSize: "3px 4px",
-                        animation: "rain-fall 0.3s linear infinite",
-                        pointerEvents: "none",
-                    }}
-                />
-            )}
 
             {/* Bottom narration strip */}
             <div
