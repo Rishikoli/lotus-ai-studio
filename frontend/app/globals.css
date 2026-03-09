@@ -1,0 +1,645 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Design Tokens ──────────────────────────────────────────────────────────── */
+:root {
+    /* Gold palette */
+    --gold-primary: #C9A84C;
+    --gold-bright: #E8D48B;
+    --gold-dim: #8B6914;
+    --gold-glow: rgba(201, 168, 76, 0.25);
+    --gold-line: rgba(201, 168, 76, 0.15);
+
+    /* Silver / neutral */
+    --silver: #A8A8A8;
+    --silver-bright: #D4D4D4;
+    --silver-dim: #666666;
+
+    /* Surfaces */
+    --bg-void: #080808;
+    --bg-deep: #0D0D0D;
+    --bg-panel: #111111;
+    --bg-elevated: #171717;
+    --bg-card: #1A1A1A;
+    --bg-hover: #222222;
+
+    /* Borders */
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-gold: rgba(201, 168, 76, 0.3);
+    --border-active: rgba(201, 168, 76, 0.6);
+
+    /* Text */
+    --text-primary: #F0F0F0;
+    --text-secondary: #A0A0A0;
+    --text-muted: #555555;
+    --text-gold: #C9A84C;
+
+    /* Status colors */
+    --color-running: #C9A84C;
+    --color-complete: #6BCB77;
+    --color-error: #E05252;
+    --color-idle: #444444;
+
+    /* Typography */
+    --font-sans: 'Outfit', system-ui, sans-serif;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Radii */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 20px;
+    --radius-pill: 9999px;
+
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background: var(--bg-void);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background: var(--bg-void);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gold-dim);
+    border-radius: var(--radius-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gold-primary);
+}
+
+/* ─── Typography ─────────────────────────────────────────────────────────────── */
+.font-display {
+    font-family: var(--font-display);
+}
+
+.font-mono {
+    font-family: var(--font-mono);
+}
+
+.text-gold {
+    color: var(--text-gold);
+}
+
+.text-silver {
+    color: var(--silver);
+}
+
+.text-dim {
+    color: var(--text-muted);
+}
+
+/* ─── Cinema Signature Elements ──────────────────────────────────────────────── */
+
+/* FADE IN: label — used on narration text appearance */
+.fade-in-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold-primary);
+    opacity: 0.7;
+}
+
+/* Gold ruled line — chapter dividers */
+.gold-rule {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+    margin: 24px 0;
+    opacity: 0.4;
+}
+
+/* Film grain noise overlay */
+.noise-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 128px 128px;
+}
+
+/* ─── Icon Micro-animations (Hugeicons + CSS) ────────────────────────────────── */
+.icon-base {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--transition-base), transform var(--transition-base);
+}
+
+/* Idle: silver, brightens to gold on hover */
+.icon-idle {
+    color: var(--silver-dim);
+}
+
+.icon-idle:hover {
+    color: var(--gold-primary);
+    transform: scale(1.05);
+}
+
+/* Active: pulsing gold */
+.icon-active {
+    color: var(--gold-primary);
+    animation: pulse-gold 2s ease-in-out infinite;
+}
+
+@keyframes pulse-gold {
+
+    0%,
+    100% {
+        opacity: 1;
+        filter: drop-shadow(0 0 4px var(--gold-glow));
+    }
+
+    50% {
+        opacity: 0.7;
+        filter: drop-shadow(0 0 8px var(--gold-glow));
+    }
+}
+
+/* Spin: gold + continuous rotation (Director generating) */
+.icon-spin {
+    color: var(--gold-primary);
+    animation: spin-gold 1.5s linear infinite;
+}
+
+@keyframes spin-gold {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Bounce: scale pop on click (Branch button) */
+.icon-bounce {
+    animation: bounce-click 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes bounce-click {
+    0% {
+        transform: scale(1);
+    }
+
+    30% {
+        transform: scale(1.3);
+    }
+
+    60% {
+        transform: scale(0.9);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Done: fade-up on agent complete */
+.icon-done {
+    color: var(--color-complete);
+    animation: fade-up-done 0.5s ease-out forwards;
+}
+
+@keyframes fade-up-done {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ─── Buttons ────────────────────────────────────────────────────────────────── */
+.btn-gold {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, var(--gold-dim) 0%, var(--gold-primary) 50%, var(--gold-bright) 100%);
+    color: #0D0D0D;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.btn-gold::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.15) 50%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform var(--transition-slow);
+}
+
+.btn-gold:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px var(--gold-glow);
+}
+
+.btn-gold:hover::before {
+    transform: translateX(100%);
+}
+
+.btn-gold:active {
+    transform: translateY(0);
+}
+
+.btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: transparent;
+    color: var(--silver);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color var(--transition-base), border-color var(--transition-base), background var(--transition-base);
+}
+
+.btn-ghost:hover {
+    color: var(--gold-primary);
+    border-color: var(--border-gold);
+    background: var(--gold-line);
+}
+
+/* Star border button variant */
+.btn-star-border {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color var(--transition-base), color var(--transition-base);
+}
+
+.btn-star-border::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, var(--gold-primary), transparent 40%, transparent 60%, var(--gold-primary));
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    animation: rotate-border 3s linear infinite;
+    z-index: -1;
+}
+
+@keyframes rotate-border {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.btn-star-border:hover {
+    border-color: var(--border-active);
+    color: var(--gold-primary);
+}
+
+.btn-star-border:hover::after {
+    opacity: 1;
+}
+
+/* ─── Cards / Panels ─────────────────────────────────────────────────────────── */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.card:hover {
+    border-color: var(--border-gold);
+    box-shadow: 0 0 24px var(--gold-glow);
+}
+
+/* ─── Input ──────────────────────────────────────────────────────────────────── */
+.input-gold {
+    width: 100%;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    padding: 14px 18px;
+    outline: none;
+    resize: none;
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.input-gold::placeholder {
+    color: var(--text-muted);
+}
+
+.input-gold:focus {
+    border-color: var(--border-gold);
+    box-shadow: 0 0 0 3px var(--gold-line);
+}
+
+/* ─── Shimmer loading skeleton ───────────────────────────────────────────────── */
+.shimmer {
+    background: linear-gradient(90deg, var(--bg-elevated) 25%, var(--bg-hover) 50%, var(--bg-elevated) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s ease-in-out infinite;
+    border-radius: var(--radius-md);
+}
+
+@keyframes shimmer {
+    from {
+        background-position: 200% 0;
+    }
+
+    to {
+        background-position: -200% 0;
+    }
+}
+
+/* ─── Gold glow text ─────────────────────────────────────────────────────────── */
+.glow-text {
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold-bright), var(--gold-primary));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: shine-text 3s linear infinite;
+}
+
+@keyframes shine-text {
+    from {
+        background-position: 0% center;
+    }
+
+    to {
+        background-position: 200% center;
+    }
+}
+
+/* ─── Typewriter cursor ──────────────────────────────────────────────────────── */
+.typewriter-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: var(--gold-primary);
+    margin-left: 2px;
+    animation: cursor-blink 1s step-end infinite;
+    vertical-align: text-bottom;
+}
+
+@keyframes cursor-blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+/* ─── Pipeline node animations ───────────────────────────────────────────────── */
+.node-idle {
+    stroke: var(--color-idle);
+    fill: var(--bg-elevated);
+}
+
+.node-running {
+    stroke: var(--gold-primary);
+    fill: var(--bg-card);
+    filter: drop-shadow(0 0 6px var(--gold-glow));
+    animation: pulse-gold 1.5s ease-in-out infinite;
+}
+
+.node-complete {
+    stroke: var(--color-complete);
+    fill: var(--bg-card);
+}
+
+.node-error {
+    stroke: var(--color-error);
+    fill: var(--bg-card);
+}
+
+/* Data packet animation — travels along edge */
+@keyframes packet-travel {
+    0% {
+        offset-distance: 0%;
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        offset-distance: 100%;
+        opacity: 0;
+    }
+}
+
+.data-packet {
+    animation: packet-travel 1.2s ease-in-out forwards;
+    offset-path: var(--edge-path);
+}
+
+/* ─── Panel layout classes ────────────────────────────────────────────────────── */
+.panel-full-width {
+    grid-column: 1 / -1;
+    aspect-ratio: 21/9;
+}
+
+.panel-portrait-left {
+    grid-column: 1 / 2;
+    aspect-ratio: 9/16;
+}
+
+.panel-portrait-right {
+    grid-column: 2 / 3;
+    aspect-ratio: 9/16;
+}
+
+.panel-split-2col {
+    grid-column: span 1;
+    aspect-ratio: 4/3;
+}
+
+.panel-cinematic-wide {
+    grid-column: 1 / -1;
+    aspect-ratio: 239/100;
+}
+
+/* ─── Diff view (Story Diff) ─────────────────────────────────────────────────── */
+.diff-modified {
+    background: rgba(201, 168, 76, 0.12);
+    border-left: 2px solid var(--gold-primary);
+}
+
+.diff-removed {
+    background: rgba(224, 82, 82, 0.10);
+    border-left: 2px solid #E05252;
+}
+
+.diff-added {
+    background: rgba(107, 203, 119, 0.10);
+    border-left: 2px solid #6BCB77;
+}
+
+/* ─── Animations ─────────────────────────────────────────────────────────────── */
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-fade-up {
+    animation: fade-up 0.5s ease-out forwards;
+}
+
+.animate-fade-in {
+    animation: fade-in 0.4s ease-out forwards;
+}
+
+.animate-scale-in {
+    animation: scale-in 0.3s ease-out forwards;
+}
+
+/* Stagger delay helpers */
+.delay-1 {
+    animation-delay: 0.1s;
+}
+
+.delay-2 {
+    animation-delay: 0.2s;
+}
+
+.delay-3 {
+    animation-delay: 0.3s;
+}
+
+.delay-4 {
+    animation-delay: 0.4s;
+}
+
+/* ─── Utility overrides ───────────────────────────────────────────────────────── */
+.backdrop-blur-premium {
+    backdrop-filter: blur(20px) saturate(1.5);
+}
+
+.border-gold {
+    border-color: var(--border-gold) !important;
+}
+
+.bg-deep {
+    background: var(--bg-deep);
+}
+
+.bg-panel {
+    background: var(--bg-panel);
+}
+
+.bg-card-dark {
+    background: var(--bg-card);
+}
