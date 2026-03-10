@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 import type { StoryPanel as StoryPanelType } from "../types";
-import { MoreVerticalCircle01Icon, GitBranchIcon } from "hugeicons-react";
+import {
+    MoreVerticalCircle01Icon,
+    GitBranchIcon,
+    Moon02Icon,
+    Sun01Icon,
+    LaughingIcon,
+    FlashIcon
+} from "hugeicons-react";
 import SceneCanvas from "./SceneCanvas";
 
 interface StoryPanelProps {
@@ -13,10 +20,10 @@ interface StoryPanelProps {
 }
 
 const BRANCH_DIRECTIONS = [
-    { key: "darker", label: "Go Darker 🌑", color: "#8899AA" },
-    { key: "hopeful", label: "Go Hopeful ☀️", color: "#D4A843" },
-    { key: "comedic", label: "Go Comedic 😂", color: "#7DB87A" },
-    { key: "chaotic", label: "Go Chaotic ⚡", color: "#E05252" },
+    { key: "darker", label: "Go Darker", icon: Moon02Icon, color: "#8899AA" },
+    { key: "hopeful", label: "Go Hopeful", icon: Sun01Icon, color: "#D4A843" },
+    { key: "comedic", label: "Go Comedic", icon: LaughingIcon, color: "#7DB87A" },
+    { key: "chaotic", label: "Go Chaotic", icon: FlashIcon, color: "#E05252" },
 ];
 
 const EMOTION_OVERLAYS: Record<string, string> = {
@@ -117,10 +124,11 @@ export default function StoryPanel({ panel, sessionId, onBranch, isBranch }: Sto
                     <p
                         style={{
                             fontFamily: "var(--font-sans)",
-                            fontSize: "13px",
+                            fontSize: "15px",
                             lineHeight: 1.6,
-                            color: "var(--text-secondary)",
-                            textShadow: "0 1px 4px rgba(0,0,0,0.8)",
+                            color: "var(--text-primary)",
+                            fontWeight: 500,
+                            textShadow: "0 1px 8px rgba(0,0,0,0.9)",
                         }}
                     >
                         {panel.narration}
@@ -169,7 +177,9 @@ export default function StoryPanel({ panel, sessionId, onBranch, isBranch }: Sto
                                         onBranch(panel.id, dir.key);
                                     }}
                                     style={{
-                                        display: "block",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "8px",
                                         width: "100%",
                                         textAlign: "left",
                                         padding: "8px 12px",
@@ -185,7 +195,8 @@ export default function StoryPanel({ panel, sessionId, onBranch, isBranch }: Sto
                                     onMouseEnter={e => (e.currentTarget.style.background = "var(--bg-hover)")}
                                     onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
                                 >
-                                    {dir.label}
+                                    <dir.icon size={14} />
+                                    <span>{dir.label}</span>
                                 </button>
                             ))}
                         </div>

@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Film02Icon, GitBranchIcon, FlashIcon } from "hugeicons-react";
+import { Film02Icon, GitBranchIcon, FlashIcon, UserIcon, Logout01Icon, GoogleIcon } from "hugeicons-react";
+import { useAuth } from "../hooks/useAuth";
+import StarBorder from "./StarBorder";
+import { auth } from "../../lib/firebase";
 
 interface NavbarProps {
     sessionId?: string | null;
@@ -10,6 +13,7 @@ interface NavbarProps {
 
 export default function Navbar({ sessionId, onGalleryClick }: NavbarProps) {
     const [isHealthy, setIsHealthy] = useState<boolean | null>(null);
+    const { user, signInWithGoogle, logout } = useAuth();
 
     // Warm up Cloud Run on mount by pinging /health
     // Called from page.tsx on load — prevents cold start on first Generate click
@@ -28,49 +32,57 @@ export default function Navbar({ sessionId, onGalleryClick }: NavbarProps) {
                 position: "fixed",
                 top: 0, left: 0, right: 0,
                 zIndex: 100,
-                height: "56px",
+                height: "70px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                padding: "0 24px",
+                padding: "0 32px",
                 background: "rgba(8, 8, 8, 0.85)",
                 borderBottom: "1px solid var(--border-subtle)",
                 backdropFilter: "blur(20px) saturate(1.5)",
             }}
         >
             {/* Logo */}
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                 <div
-                    className="icon-base icon-active"
-                    style={{ width: "20px", height: "20px" }}
+                    className="icon-base"
+                    style={{
+                        width: "80px",
+                        height: "80px",
+                        marginTop: "10px",
+                        filter: "drop-shadow(0 0 15px var(--gold-glow))",
+                        zIndex: 110
+                    }}
                 >
-                    <Film02Icon size={20} />
+                    <img src="/logo.svg" alt="Lotus logo" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                 </div>
-                <span
-                    className="glow-text"
-                    style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "18px",
-                        fontWeight: 700,
-                        letterSpacing: "0.12em",
-                        textTransform: "uppercase",
-                    }}
-                >
-                    Lotus
-                </span>
-                <span
-                    style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "10px",
-                        color: "var(--silver-dim)",
-                        letterSpacing: "0.2em",
-                        textTransform: "uppercase",
-                        alignSelf: "flex-end",
-                        paddingBottom: "2px",
-                    }}
-                >
-                    AI Studio
-                </span>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                    <span
+                        className="glow-text"
+                        style={{
+                            fontFamily: "var(--font-display)",
+                            fontSize: "22px",
+                            fontWeight: 700,
+                            letterSpacing: "0.12em",
+                            textTransform: "uppercase",
+                            lineHeight: 1,
+                        }}
+                    >
+                        Lotus
+                    </span>
+                    <span
+                        style={{
+                            fontFamily: "var(--font-mono)",
+                            fontSize: "9px",
+                            color: "var(--text-muted)",
+                            letterSpacing: "0.3em",
+                            textTransform: "uppercase",
+                            marginTop: "4px"
+                        }}
+                    >
+                        AI Studio
+                    </span>
+                </div>
             </div>
 
             {/* Center: session indicator */}
@@ -90,7 +102,7 @@ export default function Navbar({ sessionId, onGalleryClick }: NavbarProps) {
             )}
 
             {/* Right: actions */}
-            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
                 {/* Backend health indicator */}
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                     <div
@@ -109,15 +121,51 @@ export default function Navbar({ sessionId, onGalleryClick }: NavbarProps) {
                     </span>
                 </div>
 
-                {/* Gallery button */}
-                <button className="btn-ghost" onClick={onGalleryClick} style={{ fontSize: "12px", padding: "6px 12px" }}>
-                    <GitBranchIcon size={14} />
-                    Story Commits
-                </button>
+                {/* Action Group */}
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                    {/* Gallery button */}
+                    <button className="btn-ghost" onClick={onGalleryClick} style={{ fontSize: "12px", padding: "6px 12px" }}>
+                        <GitBranchIcon size={14} />
+                        Story Commits
+                    </button>
 
-                {/* Flash - Branch indicator */}
-                <div className="icon-base icon-idle" style={{ cursor: "default" }}>
-                    <FlashIcon size={16} />
+                    {/* Flash - Branch indicator */}
+                    <div className="icon-base icon-idle" style={{ cursor: "default" }}>
+                        <FlashIcon size={16} />
+                    </div>
+
+                    <div style={{ width: "1px", height: "24px", background: "var(--border-subtle)", margin: "0 8px" }} />
+
+                    {/* Auth Section - Only shown if Auth is initialized */}
+                    {auth && (
+                        user ? (
+                            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "4px 12px", background: "rgba(255,255,255,0.05)", borderRadius: "var(--radius-pill)", border: "1px solid var(--border-subtle)" }}>
+                                    {user.photoURL ? (
+                                        <img src={user.photoURL} alt={user.displayName || "User"} style={{ width: "20px", height: "20px", borderRadius: "50%" }} />
+                                    ) : (
+                                        <UserIcon size={14} className="text-silver" />
+                                    )}
+                                    <span style={{ fontSize: "11px", color: "var(--text-secondary)", fontFamily: "var(--font-mono)" }}>
+                                        {user.displayName?.split(' ')[0].toUpperCase()}
+                                    </span>
+                                </div>
+                                <button className="btn-ghost" onClick={logout} style={{ padding: "8px" }} title="Sign Out">
+                                    <Logout01Icon size={14} />
+                                </button>
+                            </div>
+                        ) : (
+                            <StarBorder
+                                color="var(--gold-primary)"
+                                speed="4s"
+                                thickness={2}
+                                onClick={signInWithGoogle}
+                            >
+                                <GoogleIcon size={14} color="var(--gold-primary)" />
+                                <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--gold-primary)", letterSpacing: "0.05em" }}>SIGN IN</span>
+                            </StarBorder>
+                        )
+                    )}
                 </div>
             </div>
         </nav>

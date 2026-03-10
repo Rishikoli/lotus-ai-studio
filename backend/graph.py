@@ -19,6 +19,7 @@ from config import (
     build_template_system_prompt, GCS_BUCKET,
 )
 from state import StudioState
+from services.firestore import save_script_draft, finalize_story_commit
 
 log = logging.getLogger("lotus.graph")
 genai.configure(api_key=GEMINI_API_KEY)
@@ -331,9 +332,22 @@ Score 8+ = approve. Below 8 = request revision.
 
 def script_doctor_router(state: StudioState) -> str:
     """Conditional edge: loop back to Screenwriter if score < 8 and revisions remaining."""
-    if state["script_score"] < 8 and state["max_revisions"] > 0 and not state.get("branch_direction"):
-        log.info(f"Script Doctor routing back to Screenwriter (score={state['script_score']}, revisions_left={state['max_revisions']})")
+    score = state.get("script_score", 0)
+    revisions_left = state.get("max_revisions", 0)
+    
+    log.info(f"Script Doctor Router: score={score}, revisions_left={revisions_left}")
+    
+    # Bug 13 Fix: If score is 0 (error/failure), DO NOT loop back.
+    # This prevents infinite loops if the Screenwriter keeps failing or Script Doctor can't parse.
+    if score == 0:
+        log.warning("Script Doctor produced a 0 score (parsing error or node failure). Breaking loop.")
+        return "hitl_gate_node"
+
+    if score < 8 and revisions_left > 0 and not state.get("branch_direction"):
+        log.info(f"Routing back to screenwriter (revisions remaining: {revisions_left})")
         return "screenwriter_node"
+        
+    log.info("Routing to HITL Gate (approval or out of revisions)")
     return "hitl_gate_node"
 
 
@@ -385,6 +399,8 @@ async def director_node(state: StudioState):
         "session_id": state["session_id"],
     }
 
+    final_panels_data = []
+
     # 3. For each panel — stream text then image
     for panel in panel_schema:
         panel_id = panel["id"]
@@ -416,6 +432,20 @@ async def director_node(state: StudioState):
             "type": SSE_PANEL_DONE,
             "panel_id": panel_id,
         }
+        
+        # Accumulate panel data for Save Point 2
+        final_panels_data.append({
+            "panel_id": panel_id,
+            "image_url": image_url,
+            "narration": narration,
+            "physics": physics,
+            "emotion": emotion,
+            "layout": layout,
+        })
+
+    # Save Point 2: Finalize story in Firestore (if not a branch partial-run)
+    if not state.get("branch_direction"):
+        await finalize_story_commit(state["session_id"], final_panels_data)
 
     yield {"type": SSE_DONE, "session_id": state["session_id"]}
 
@@ -572,6 +602,9 @@ async def hitl_gate_node(state: StudioState) -> dict:
     # Save state to Redis for reconnect/resume
     from main import save_state
     save_state(state["session_id"], state)
+    
+    # Save Point 1: Create draft in Firestore
+    await save_script_draft(state["session_id"], state)
 
     return {
         "meta_commentary": [f"HITL: waiting for user approval of script (score: {state.get('script_score', '?')}/10)"],

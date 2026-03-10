@@ -21,6 +21,7 @@ from config import (
     PIPELINE_TEMPLATES,
 )
 from state import StudioState, make_initial_state
+from services.firestore import update_branch_ids
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("lotus")
@@ -243,6 +244,9 @@ async def branch(body: BranchRequest, _auth=Depends(verify_api_key)):
 
     # Cache branch state
     save_state(branch_id, branch_state)
+    
+    # Firestore: Add branch_id to parent commit
+    await update_branch_ids(body.session_id, branch_id)
 
     return StreamingResponse(
         _run_branch_pipeline(branch_state),
@@ -362,6 +366,16 @@ def _parse_langgraph_event(event: dict) -> Optional[dict]:
     # Chain / node completions for meta tracking
     if kind in ("on_chain_end", "on_tool_end"):
         name = event.get("name", "")
+        output = event.get("data", {}).get("output", {})
+        
+        # If screenwriter finished, stream the script draft (useful for branches)
+        if name == "screenwriter_node" and isinstance(output, dict) and "script_draft" in output:
+            return {
+                "type": "script",
+                "content": output["script_draft"],
+                "node": name
+            }
+
         return {
             "type": SSE_META,
             "node": name,

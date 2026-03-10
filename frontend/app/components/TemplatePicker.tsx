@@ -3,6 +3,21 @@
 import { useState } from "react";
 import type { PipelineTemplate } from "../types";
 import { TEMPLATE_META } from "../types";
+import {
+    Film01Icon,
+    Moon02Icon,
+    MagicWand01Icon,
+    LaughingIcon,
+    SkullIcon
+} from "hugeicons-react";
+
+const ICON_MAP: Record<string, any> = {
+    film: Film01Icon,
+    moody: Moon02Icon,
+    magic: MagicWand01Icon,
+    laugh: LaughingIcon,
+    horror: SkullIcon,
+};
 
 interface TemplatePickerProps {
     selected: PipelineTemplate;
@@ -29,6 +44,8 @@ export default function TemplatePicker({ selected, onChange }: TemplatePickerPro
             <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                 {templates.map(([key, meta]) => {
                     const isActive = selected === key;
+                    const Icon = ICON_MAP[meta.iconId] || Film01Icon;
+
                     return (
                         <button
                             key={key}
@@ -36,21 +53,25 @@ export default function TemplatePicker({ selected, onChange }: TemplatePickerPro
                             style={{
                                 display: "flex",
                                 alignItems: "center",
-                                gap: "6px",
+                                gap: "8px",
                                 padding: "8px 14px",
                                 borderRadius: "var(--radius-md)",
                                 border: `1px solid ${isActive ? meta.color : "var(--border-subtle)"}`,
                                 background: isActive ? `${meta.color}18` : "var(--bg-panel)",
-                                color: isActive ? meta.color : "var(--silver-dim)",
+                                color: isActive ? meta.color : "var(--text-secondary)",
                                 fontFamily: "var(--font-sans)",
-                                fontSize: "13px",
-                                fontWeight: isActive ? 600 : 400,
+                                fontSize: "14px",
+                                fontWeight: 500,
                                 cursor: "pointer",
                                 transition: "all var(--transition-base)",
                                 boxShadow: isActive ? `0 0 12px ${meta.color}30` : "none",
                             }}
                         >
-                            <span>{meta.icon}</span>
+                            <Icon
+                                size={18}
+                                className={isActive ? "glow-icon-active" : ""}
+                                style={{ color: isActive ? "inherit" : "var(--text-muted)" }}
+                            />
                             <span>{meta.label}</span>
                         </button>
                     );

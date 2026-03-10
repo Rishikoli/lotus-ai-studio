@@ -29,6 +29,7 @@ export function useStoryStream() {
         branch_id: null,
         pipeline_nodes: makeInitialPipelineNodes(),
         script_draft: "",
+        branch_script_draft: "",
         meta_log: [],
         error: null,
     });
@@ -90,6 +91,7 @@ export function useStoryStream() {
             branch_id: null,
             pipeline_nodes: makeInitialPipelineNodes(),
             script_draft: "",
+            branch_script_draft: "",
             meta_log: [],
             error: null,
         }));
@@ -197,7 +199,7 @@ function applyChunk(prev: StudioUIState, chunk: SSEChunk, isBranch: boolean): St
             const meta = chunk as MetaChunk;
             const nodes = prev.pipeline_nodes.map(n =>
                 n.id === meta.node
-                    ? { ...n, status: meta.status === "complete" ? "complete" : "running" as const, duration_ms: meta.duration_ms }
+                    ? { ...n, status: meta.status as any, duration_ms: meta.duration_ms }
                     : n
             );
             return {
@@ -274,6 +276,14 @@ function applyChunk(prev: StudioUIState, chunk: SSEChunk, isBranch: boolean): St
                 duration_ms: 0, content: chunk.content,
             };
             return { ...prev, meta_log: [...prev.meta_log, errorMeta] };
+        }
+
+        case "script": {
+            const target = isBranch ? "branch_script_draft" : "script_draft";
+            return {
+                ...prev,
+                [target]: chunk.content,
+            };
         }
 
         default:

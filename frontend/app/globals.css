@@ -14,34 +14,35 @@
     --gold-line: rgba(201, 168, 76, 0.15);
 
     /* Silver / neutral */
-    --silver: #A8A8A8;
-    --silver-bright: #D4D4D4;
-    --silver-dim: #666666;
+    --silver: #B8B8B8;
+    --silver-bright: #F0F0F0;
+    --silver-dim: #999999;
 
     /* Surfaces */
-    --bg-void: #080808;
-    --bg-deep: #0D0D0D;
+    --bg-void: #050505;
+    --bg-deep: #0A0A0A;
     --bg-panel: #111111;
-    --bg-elevated: #171717;
-    --bg-card: #1A1A1A;
-    --bg-hover: #222222;
+    --bg-elevated: #161616;
+    --bg-card: #1C1C1C;
+    --bg-hover: #252525;
 
     /* Borders */
-    --border-subtle: rgba(255, 255, 255, 0.06);
-    --border-gold: rgba(201, 168, 76, 0.3);
-    --border-active: rgba(201, 168, 76, 0.6);
+    --border-subtle: rgba(255, 255, 255, 0.1);
+    --border-gold: rgba(201, 168, 76, 0.4);
+    --border-active: rgba(201, 168, 76, 0.7);
 
     /* Text */
-    --text-primary: #F0F0F0;
-    --text-secondary: #A0A0A0;
-    --text-muted: #555555;
-    --text-gold: #C9A84C;
+    --text-primary: #FFFFFF;
+    --text-secondary: #D1D1D1;
+    --text-muted: #888888;
+    --text-gold: #D4B663;
 
     /* Status colors */
-    --color-running: #C9A84C;
-    --color-complete: #6BCB77;
-    --color-error: #E05252;
-    --color-idle: #444444;
+    --color-running: #D4B663;
+    --color-complete: #84E08F;
+    --color-error: #F06262;
+    --color-idle: #666666;
+
 
     /* Typography */
     --font-sans: 'Outfit', system-ui, sans-serif;
@@ -74,7 +75,7 @@ html {
     background: var(--bg-void);
     color: var(--text-primary);
     font-family: var(--font-sans);
-    font-size: 16px;
+    font-size: 17px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -621,6 +622,48 @@ body {
 
 .delay-4 {
     animation-delay: 0.4s;
+}
+
+/* ─── Glow Animations ───────────────────────────────────────────────────────── */
+.glow-box {
+    position: relative;
+    box-shadow: 0 0 20px rgba(201, 168, 76, 0.1);
+    animation: glow-breathe 4s ease-in-out infinite;
+}
+
+@keyframes glow-breathe {
+
+    0%,
+    100% {
+        box-shadow: 0 0 20px rgba(201, 168, 76, 0.1),
+            inset 0 0 10px rgba(201, 168, 76, 0.05);
+        border-color: rgba(201, 168, 76, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 40px rgba(201, 168, 76, 0.25),
+            inset 0 0 20px rgba(201, 168, 76, 0.1);
+        border-color: rgba(201, 168, 76, 0.5);
+    }
+}
+
+.glow-icon-active {
+    filter: drop-shadow(0 0 8px var(--gold-primary));
+    animation: glow-icon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-icon-pulse {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 4px var(--gold-primary));
+        opacity: 1;
+    }
+
+    50% {
+        filter: drop-shadow(0 0 12px var(--gold-bright));
+        opacity: 0.8;
+    }
 }
 
 /* ─── Utility overrides ───────────────────────────────────────────────────────── */

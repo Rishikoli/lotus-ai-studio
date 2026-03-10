@@ -2,8 +2,6 @@
  * types.ts — Shared TypeScript types for Lotus AI Studio frontend
  */
 
-// ─── SSE Chunk Types (matches backend config.py SSE_* constants) ──────────────
-
 export type SSEChunkType =
     | "meta"
     | "script"
@@ -22,6 +20,13 @@ export interface MetaChunk {
     status: "running" | "complete" | "error";
     duration_ms: number;
     content: string;
+    branch_id?: string;
+}
+
+export interface ScriptChunk {
+    type: "script";
+    content: string;
+    node: string;
     branch_id?: string;
 }
 
@@ -75,6 +80,7 @@ export interface ErrorChunk {
 
 export type SSEChunk =
     | MetaChunk
+    | ScriptChunk
     | HitlPauseChunk
     | PanelSchemaChunk
     | PanelTextChunk
@@ -141,12 +147,12 @@ export const PIPELINE_NODES: Omit<PipelineNode, "status">[] = [
 
 export type PipelineTemplate = "default" | "noir" | "epic_fantasy" | "comedy" | "horror";
 
-export const TEMPLATE_META: Record<PipelineTemplate, { label: string; icon: string; description: string; color: string }> = {
-    default: { label: "Default", icon: "🎬", description: "Cinematic drama", color: "#C9A84C" },
-    noir: { label: "Noir", icon: "🌑", description: "Rain-soaked cynicism", color: "#8899AA" },
-    epic_fantasy: { label: "Epic Fantasy", icon: "🔥", description: "Mythic world-shaking", color: "#D4A843" },
-    comedy: { label: "Comedy", icon: "😂", description: "Absurdist tension→chaos", color: "#7DB87A" },
-    horror: { label: "Horror", icon: "👻", description: "Slow-burn dread", color: "#AA4455" },
+export const TEMPLATE_META: Record<PipelineTemplate, { label: string; iconId: string; description: string; color: string }> = {
+    default: { label: "Default", iconId: "film", description: "Cinematic drama", color: "#C9A84C" },
+    noir: { label: "Noir", iconId: "moody", description: "Rain-soaked cynicism", color: "#8899AA" },
+    epic_fantasy: { label: "Epic Fantasy", iconId: "magic", description: "Mythic world-shaking", color: "#D4A843" },
+    comedy: { label: "Comedy", iconId: "laugh", description: "Absurdist tension→chaos", color: "#7DB87A" },
+    horror: { label: "Horror", iconId: "horror", description: "Slow-burn dread", color: "#AA4455" },
 };
 
 // ─── Story Commit (Firestore document) ────────────────────────────────────────
@@ -175,6 +181,7 @@ export interface StudioUIState {
     branch_id: string | null;
     pipeline_nodes: PipelineNode[];
     script_draft: string;
+    branch_script_draft: string;    // alternate version for diffing
     meta_log: MetaChunk[];
     error: string | null;
 }
