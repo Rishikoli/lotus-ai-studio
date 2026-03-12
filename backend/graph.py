@@ -6,23 +6,31 @@ graph.py — LangGraph pipeline for Lotus AI Studio.
 import time
 import json
 import logging
+import asyncio
 from typing import AsyncIterator, Optional
 
-import google.generativeai as genai
+import vertexai
+from vertexai.generative_models import GenerativeModel, GenerationConfig
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
 
+from vertexai.preview.vision_models import ImageGenerationModel
+from google.api_core import exceptions
+
 from config import (
-    GEMINI_API_KEY, PIPELINE_MODEL, DIRECTOR_MODEL, DIRECTOR_MODE,
-    SSE_META, SSE_HITL_PAUSE, SSE_PANEL_SCHEMA, SSE_PANEL_TEXT,
+    PIPELINE_MODEL, DIRECTOR_MODEL, DIRECTOR_MODE,
+    SSE_META, SSE_AUDIO_VIBE, SSE_HITL_PAUSE, SSE_PANEL_SCHEMA, SSE_PANEL_TEXT,
     SSE_PANEL_IMAGE, SSE_PANEL_DONE, SSE_DONE, SSE_ERROR,
     build_template_system_prompt, GCS_BUCKET,
 )
 from state import StudioState
-from services.firestore import save_script_draft, finalize_story_commit
+from services.firestore import (
+    save_script_draft, finalize_story_commit, 
+    search_multiverse_lore, commit_to_multiverse
+)
 
 log = logging.getLogger("lotus.graph")
-genai.configure(api_key=GEMINI_API_KEY)
+vertexai.init(project="phrasal-bivouac-489706-r8", location="us-central1")
 
 # ─── Shared Gemini caller ─────────────────────────────────────────────────────
 
@@ -32,16 +40,33 @@ async def call_gemini(
     model_name: str = PIPELINE_MODEL,
     temperature: float = 0.8,
 ) -> str:
-    """Single Gemini call. Returns full response text."""
-    model = genai.GenerativeModel(
+    """Single Gemini call with exponential backoff for 429s."""
+    model = GenerativeModel(
         model_name=model_name,
         system_instruction=system,
     )
-    response = await model.generate_content_async(
-        user_prompt,
-        generation_config=genai.GenerationConfig(temperature=temperature),
-    )
-    return response.text.strip()
+    
+    max_retries = 3
+    backoff = 1
+    
+    for i in range(max_retries + 1):
+        try:
+            response = await model.generate_content_async(
+                user_prompt,
+                generation_config=GenerationConfig(temperature=temperature),
+            )
+            return response.text.strip()
+        except exceptions.ResourceExhausted as e:
+            if i == max_retries:
+                log.error(f"Gemini 429: Resource exhausted after {max_retries} retries.")
+                raise e
+            log.warning(f"Gemini 429 hit. Retrying in {backoff}s... ({i+1}/{max_retries})")
+            await asyncio.sleep(backoff)
+            backoff *= 2
+        except Exception as e:
+            log.error(f"Gemini call failed: {e}")
+            raise e
+    return ""
 
 
 def meta_event(node: str, status: str, content: str, duration_ms: int = 0) -> dict:
@@ -59,25 +84,68 @@ def meta_event(node: str, status: str, content: str, duration_ms: int = 0) -> di
 # Wrapped in safe_node() to gracefully handle individual agent failures.
 
 def safe_node(node_name: str):
-    """Decorator — wraps any node fn in try/except. On failure passes state through."""
+    """Decorator — wraps any node fn in try/except. Supports both async fns and generators."""
+    import inspect
     def decorator(fn):
-        async def wrapper(state: StudioState) -> dict:
-            t_start = time.time()
-            try:
-                result = await fn(state)
-                duration_ms = int((time.time() - t_start) * 1000)
-                log.info(f"{node_name} completed in {duration_ms}ms")
-                return result
-            except Exception as e:
-                duration_ms = int((time.time() - t_start) * 1000)
-                log.error(f"{node_name} failed: {e}")
-                # Pass through state unchanged — pipeline continues with best available data
-                return {
-                    "meta_commentary": [f"[{node_name}] encountered an error: {str(e)[:100]}"],
-                }
+        if inspect.isasyncgenfunction(fn):
+            async def wrapper(state: StudioState):
+                t_start = time.time()
+                try:
+                    async for chunk in fn(state):
+                        yield chunk
+                    duration_ms = int((time.time() - t_start) * 1000)
+                    log.info(f"{node_name} completed in {duration_ms}ms")
+                except Exception as e:
+                    log.error(f"{node_name} generator failed: {e}")
+                    yield {"meta_commentary": [f"[{node_name}] error: {str(e)[:100]}"]}
+        else:
+            async def wrapper(state: StudioState) -> dict:
+                t_start = time.time()
+                try:
+                    result = await fn(state)
+                    duration_ms = int((time.time() - t_start) * 1000)
+                    log.info(f"{node_name} completed in {duration_ms}ms")
+                    return result
+                except Exception as e:
+                    log.error(f"{node_name} failed: {e}")
+                    return {"meta_commentary": [f"[{node_name}] error: {str(e)[:100]}"]}
         wrapper.__name__ = node_name
         return wrapper
     return decorator
+
+
+# ─── NODE 0: Historian ────────────────────────────────────────────────────────
+
+@safe_node("historian_node")
+async def historian_node(state: StudioState) -> dict:
+    """Scan the user prompt for multiverse entities and pull their history."""
+    system = """You are a Master Historian of the Lotus Multiverse. 
+Your task: Identify potential entities (Characters, Artifacts, Locations) mentioned in the user's prompt.
+Extract exactly the keywords that could be keys in a lore ledger.
+Output ONLY a JSON array of strings."""
+
+    response = await call_gemini(
+        system=system,
+        user_prompt=state["user_prompt"],
+        temperature=0.3,
+    )
+    
+    keywords = []
+    try:
+        keywords = json.loads(response)
+        if not isinstance(keywords, list): keywords = []
+    except:
+        pass
+    
+    lore = []
+    if keywords:
+        lore = await search_multiverse_lore(keywords)
+    
+    meta = f"Historian: Searched lore for {keywords}. Found {len(lore)} relevant entries."
+    return {
+        "multiverse_lore": lore,
+        "meta_commentary": [meta],
+    }
 
 
 # ─── NODE 1: Researcher ───────────────────────────────────────────────────────
@@ -86,21 +154,21 @@ def safe_node(node_name: str):
 async def researcher_node(state: StudioState) -> dict:
     template_prompt = build_template_system_prompt(state["pipeline_template"])
 
-    system = f"""You are a world-class Research Director for a cinematic story studio.
-Your job: build a rich, internally-consistent WORLD BIBLE from the user's prompt.
-Include: history, factions, technology level, cultural norms, geography, and atmosphere.
-Be detailed but precise. This document will be used by all other agents.
-{template_prompt}"""
+    # Import the new ADK Agent wrapper
+    from agents.researcher_adk import run_adk_researcher
 
-    world_bible = await call_gemini(
-        system=system,
-        user_prompt=f"Build a comprehensive World Bible for this story: {state['user_prompt']}",
-        temperature=0.85,
+    # The ADK Agent handles tools and reasoning natively via InMemoryRunner
+    lore_str = json.dumps(state.get("multiverse_lore", []))
+    user_prompt = f"Template constraints: {template_prompt}\nMultiverse Lore (RESPECT THIS): {lore_str}\nUser Prompt: {state['user_prompt']}"
+    
+    world_bible = await run_adk_researcher(
+        user_prompt=user_prompt,
+        session_id=state["session_id"]
     )
 
     return {
         "world_bible": world_bible,
-        "meta_commentary": [f"Researcher: World bible complete ({len(world_bible)} chars)"],
+        "meta_commentary": [f"Researcher [ADK]: World bible complete ({len(world_bible)} chars)"],
     }
 
 
@@ -150,7 +218,7 @@ For each: name, visual description, atmosphere, and how it serves the narrative.
 # ─── NODE 3: Casting Director ─────────────────────────────────────────────────
 
 @safe_node("casting_director_node")
-async def casting_director_node(state: StudioState) -> dict:
+async def casting_director_node(state: StudioState):
     template_prompt = build_template_system_prompt(state["pipeline_template"])
 
     # Temporal Continuity Manager: strict character bible
@@ -176,7 +244,6 @@ high-contrast ink, gold and black color palette, cinematic 2.39:1 framing").
     character_profiles = {}
     visual_style_bible = "Graphic novel style, high-contrast, cinematic framing"
     try:
-        # Look for JSON block in response
         if "```json" in response_text:
             json_str = response_text.split("```json")[1].split("```")[0].strip()
             data = json.loads(json_str)
@@ -186,7 +253,13 @@ high-contrast ink, gold and black color palette, cinematic 2.39:1 framing").
         log.warning("Casting Director: failed to parse JSON — using raw text as profiles")
         character_profiles = {"characters": response_text[:1000]}
 
-    return {
+    # Stream character profiles to frontend
+    yield {
+        "type": "character_profiles",
+        "profiles": character_profiles
+    }
+
+    yield {
         "character_profiles": character_profiles,
         "visual_style_bible": visual_style_bible,
         "meta_commentary": [f"Casting Director: {len(character_profiles)} characters profiled, style bible locked"],
@@ -199,20 +272,52 @@ high-contrast ink, gold and black color palette, cinematic 2.39:1 framing").
 async def sound_designer_node(state: StudioState) -> dict:
     template_prompt = build_template_system_prompt(state["pipeline_template"])
 
-    system = f"""You are a Hollywood Sound Designer.
-Create an audio mood board for this story: BPM, key instruments, ambience, and emotional cues for each act.
-Format: one paragraph describing the sonic identity of the whole story, then bullet points for each act.
+    system = f"""You are a Master Sound Designer for a cinematic story studio.
+Based on the story's visual style and world, select the most appropriate background audio 'vibe' and describe the soundscape.
+
+VIBE_CATEGORIES:
+- dark_synth: moody, retro-electronic, driving (Noir / Sci-Fi)
+- epic_orchestral: cinematic strings, brass, mythic (Fantasy / Epic)
+- lofi_mystery: soft, atmospheric, intriguing (Mystery / Drama)
+- horror_ambient: unsettling, low drones, dissonant (Horror)
+- adventurous_folk: acoustic, warm, rhythmic (Travel / Comedy)
+
+Output EXACTLY this JSON:
+{{
+  "vibe": "<one of VIBE_CATEGORIES>",
+  "mood_board": "<2-3 sentences describing the soundscape>"
+}}
 {template_prompt}"""
 
-    audio_mood_board = await call_gemini(
+    response = await call_gemini(
         system=system,
-        user_prompt=f"Story prompt: {state['user_prompt']}\nLocation physics: {state['scene_physics'][:500]}",
-        temperature=0.75,
+        user_prompt=f"Story details:\n{state['world_bible'][:1000]}\nVisual Style: {state['visual_style_bible']}",
+        temperature=0.7,
     )
 
+    vibe = "lofi_mystery"  # Default
+    mood_board = ""
+    try:
+        if "```json" in response:
+            json_str = response.split("```json")[1].split("```")[0].strip()
+        else:
+            json_str = response
+        data = json.loads(json_str)
+        vibe = data.get("vibe", "lofi_mystery")
+        mood_board = data.get("mood_board", "")
+    except Exception:
+        log.warning("Sound Designer: failed to parse JSON vibe")
+
+    # Yield the vibe event for the frontend
+    yield {
+        "type": SSE_AUDIO_VIBE,
+        "vibe": vibe,
+    }
+
     return {
-        "audio_mood_board": audio_mood_board,
-        "meta_commentary": [f"Sound Designer: audio mood board ready"],
+        "audio_mood_board": mood_board,
+        "audio_vibe": vibe,
+        "meta_commentary": [f"Sound Designer: selected {vibe} vibe."],
     }
 
 
@@ -238,6 +343,14 @@ async def screenwriter_node(state: StudioState) -> dict:
     if state.get("doctor_feedback") and state.get("script_score", 0) > 0:
         revision_note = f"\n\nREVISION NOTES from Script Doctor (score was {state['script_score']}/10):\n{state['doctor_feedback']}"
 
+    # Handle negotiation outcomes (Agentic Audience)
+    negotiation_notes = ""
+    if state.get("negotiation_outcomes"):
+        notes = []
+        for n in state["negotiation_outcomes"]:
+            notes.append(f"- Character: {n['character']}, Outcome: {n['outcome']}, Influence Directive: {n['influence']}")
+        negotiation_notes = "\n\nCRITICAL INTERACTION OUTCOMES (Must be followed):\n" + "\n".join(notes)
+
     # Handle user edits from HITL
     if state.get("user_script_edits"):
         return {
@@ -255,7 +368,7 @@ Valid emotions: calm, curious, tense, dread, peak_fear, revelation, hopeful, res
 World Bible: {state['world_bible'][:1500]}
 Characters: {json.dumps(state['character_profiles'])[:800]}
 Locations: {state['location_data'][:800]}
-{template_prompt}{branch_instruction}{revision_note}"""
+{template_prompt}{branch_instruction}{revision_note}{negotiation_notes}"""
 
     full_script = await call_gemini(
         system=system,
@@ -299,6 +412,9 @@ Output EXACTLY this JSON:
   "warnings": ["<plot hole 1>", "<plot hole 2>"]
 }}
 Score 8+ = approve. Below 8 = request revision.
+
+Guidelines:
+1. Ensure character interactions (negotiation outcomes) are respected.
 {template_prompt}"""
 
     response = await call_gemini(
@@ -407,17 +523,40 @@ async def director_node(state: StudioState):
         emotion = panel.get("emotion", "tense")
         physics = panel.get("physics", "")
         layout = panel.get("layout", "full-width")
+        sfx_cue = panel.get("sfx_cue", "")
 
-        # Stream narration text
-        narration = await _generate_panel_text(state, panel)
+        # Two-step premium process: 
+        # 1. Gemini for narration | 2. Imagen 3 for imagery | 3. Cloud TTS for audio
+        try:
+            narration = await _generate_panel_text(state, panel)
+            
+            # Generate both visuals and audio in parallel for speed
+            image_task = _generate_panel_image(state, panel, narration)
+            audio_task = _generate_panel_audio(state, panel, narration)
+            image_url, audio_url = await asyncio.gather(image_task, audio_task)
+            
+        except Exception as e:
+            log.error(f"Director processing failed for {panel_id}: {e}")
+            narration = "..."
+            image_url = f"/api/placeholder/{panel_id}"
+            audio_url = ""
+
+        # Yield extracted text
         yield {
             "type": SSE_PANEL_TEXT,
             "panel_id": panel_id,
             "content": narration,
         }
 
-        # Generate image
-        image_url = await _generate_panel_image(state, panel, narration)
+        # Yield extracted audio
+        if audio_url:
+            yield {
+                "type": SSE_PANEL_AUDIO,
+                "panel_id": panel_id,
+                "audio_url": audio_url,
+            }
+
+        # Yield extracted image
         yield {
             "type": SSE_PANEL_IMAGE,
             "panel_id": panel_id,
@@ -425,6 +564,7 @@ async def director_node(state: StudioState):
             "physics": physics,
             "emotion": emotion,
             "layout": layout,
+            "sfx_cue": sfx_cue,
         }
 
         # Panel complete
@@ -441,6 +581,7 @@ async def director_node(state: StudioState):
             "physics": physics,
             "emotion": emotion,
             "layout": layout,
+            "sfx_cue": sfx_cue,
         })
 
     # Save Point 2: Finalize story in Firestore (if not a branch partial-run)
@@ -450,15 +591,57 @@ async def director_node(state: StudioState):
     yield {"type": SSE_DONE, "session_id": state["session_id"]}
 
 
+# ─── NODE 9: Archivist ────────────────────────────────────────────────────────
+
+@safe_node("archivist_node")
+async def archivist_node(state: StudioState) -> dict:
+    """Identify new lore from the finished story and commit to the Multiverse Ledger."""
+    system = """You are the Grand Archivist of the Lotus Multiverse.
+Review the finished story (world bible, character profiles, and script).
+Identify NEW entities (Characters, Artifacts, Locations) or UPDATES to existing lore.
+Output ONLY a JSON array of objects with keys: name, lore_summary, tags (list), and status."""
+
+    # Using a slightly lower temperature for extraction consistency
+    response = await call_gemini(
+        system=system,
+        user_prompt=f"World Bible: {state['world_bible'][:1000]}\nCharacters: {json.dumps(state['character_profiles'])}\nScript: {state['script_draft'][:2000]}",
+        temperature=0.3,
+    )
+    
+    entities = []
+    try:
+        # Simple extraction logic
+        if "```json" in response:
+            json_str = response.split("```json")[1].split("```")[0].strip()
+        else:
+            json_str = response
+            
+        entities = json.loads(json_str)
+        if isinstance(entities, list):
+            # Attribution metadata
+            for ent in entities:
+                ent["session_id"] = state["session_id"]
+                ent["last_updated_at"] = time.time()
+                
+            await commit_to_multiverse(entities)
+    except Exception as e:
+        log.warning(f"Archivist: failed to parse or commit lore: {e}")
+    
+    return {
+        "meta_commentary": [f"Archivist: Synced {len(entities)} lore markers to the World Ledger."],
+    }
+
+
 async def _generate_panel_schema(state: StudioState) -> list:
     """Generate the structured panel layout plan."""
     system = """You are a Graphic Novel Art Director.
 Given a script, output a JSON array of panel objects — one per scene.
-Each panel MUST have: id (p1, p2...), layout, emotion, physics, aspect_ratio.
+Each panel MUST have: id (p1, p2...), layout, emotion, physics, aspect_ratio, and sfx_cue.
 
 layout options: "full-width", "portrait-left", "portrait-right", "split-2col", "cinematic-wide"
 emotion options: calm, curious, tense, dread, peak_fear, revelation, hopeful, resolved, comedic
 physics: from the scene physics data or "" if none
+sfx_cue: a short string identifying a cinematic sound (e.g., "thunder", "heartbeat", "explosion", "whoosh", "glitch", "rain_patter", "wind_howl") or "" if none.
 
 Output ONLY valid JSON array, no markdown."""
 
@@ -477,9 +660,9 @@ Output ONLY valid JSON array, no markdown."""
     except Exception:
         log.warning("Director: failed to parse panel schema — using default 3-panel layout")
         return [
-            {"id": "p1", "layout": "full-width", "emotion": "tense", "physics": "", "aspect_ratio": "16:9"},
-            {"id": "p2", "layout": "cinematic-wide", "emotion": state.get("emotion_arc", {}).get("scene_2", "dread"), "physics": state.get("scene_physics", "")[:50], "aspect_ratio": "2.39:1"},
-            {"id": "p3", "layout": "split-2col", "emotion": "resolved", "physics": "", "aspect_ratio": "1:1"},
+            {"id": "p1", "layout": "full-width", "emotion": "tense", "physics": "", "aspect_ratio": "16:9", "sfx_cue": "whoosh"},
+            {"id": "p2", "layout": "cinematic-wide", "emotion": state.get("emotion_arc", {}).get("scene_2", "dread"), "physics": state.get("scene_physics", "")[:50], "aspect_ratio": "2.39:1", "sfx_cue": "thunder"},
+            {"id": "p3", "layout": "split-2col", "emotion": "resolved", "physics": "", "aspect_ratio": "1:1", "sfx_cue": ""},
         ]
 
 
@@ -497,6 +680,45 @@ Style: present tense, cinematic, literary. Match the emotional tone specified.""
     )
 
 
+async def _generate_panel_audio(state: StudioState, panel: dict, narration: str) -> str:
+    """
+    Generate high-fidelity narration audio using Google Cloud Text-to-Speech.
+    Returns a public GCS URL.
+    """
+    try:
+        from google.cloud import texttospeech
+        
+        client = texttospeech.TextToSpeechAsyncClient()
+        
+        input_text = texttospeech.SynthesisInput(text=narration)
+        
+        # Use premium Studio voice for maximum cinematic impact
+        voice = texttospeech.VoiceSelectionParams(
+            language_code="en-US",
+            name="en-US-Studio-O"
+        )
+        
+        audio_config = texttospeech.AudioConfig(
+            audio_encoding=texttospeech.AudioEncoding.MP3,
+            pitch=0,
+            speaking_rate=0.95 # Slightly slower for dramatic effect
+        )
+        
+        response = await client.synthesize_speech(
+            request={"input": input_text, "voice": voice, "audio_config": audio_config}
+        )
+        
+        url = await upload_panel_audio(
+            session_id=state["session_id"],
+            panel_id=panel["id"],
+            audio_bytes=response.audio_content
+        )
+        return url
+    except Exception as e:
+        log.error(f"TTS Failed: {e}")
+        return ""
+
+
 async def _generate_panel_image(state: StudioState, panel: dict, narration: str) -> str:
     """
     Generate an image for a panel using the Prompt Cinematographer pattern.
@@ -506,17 +728,22 @@ async def _generate_panel_image(state: StudioState, panel: dict, narration: str)
     cinematographer_prompt = _build_image_prompt(state, panel, narration)
 
     try:
-        model = genai.GenerativeModel(DIRECTOR_MODEL)
-        response = await model.generate_content_async(
-            [cinematographer_prompt],
-            generation_config=genai.GenerationConfig(
-                response_mime_type="image/jpeg",
-            ),
+        import asyncio
+        # Load Imagen 3 model
+        model = ImageGenerationModel.from_pretrained("imagen-3.0-generate-001")
+        
+        # Vertex AI SDK Imagen 3 is currently synchronous
+        response = await asyncio.to_thread(
+            model.generate_images,
+            prompt=cinematographer_prompt,
+            number_of_images=1,
+            aspect_ratio="16:9",
+            language="en"
         )
 
-        if response.candidates and response.candidates[0].content.parts:
-            image_bytes = response.candidates[0].content.parts[0].inline_data.data
-
+        if response and response.images:
+            image_bytes = response.images[0]._image_bytes
+            
             # Upload to Cloud Storage if configured
             from services.storage import upload_panel_image
             url = await upload_panel_image(
@@ -554,7 +781,7 @@ def _build_image_prompt(state: StudioState, panel: dict, narration: str) -> str:
     visual_lang = emotion_visual.get(emotion, "cinematic framing")
 
     char_desc = " ".join([
-        f"{name}: {', '.join(str(v) for v in attrs.values())[:100]}"
+        f"{name}: {(', '.join(str(v) for v in attrs.values()) if isinstance(attrs, dict) else str(attrs))[:100]}"
         for name, attrs in list(characters.items())[:2]
     ])
 
@@ -573,8 +800,16 @@ async def run_director_node(state: StudioState, panel_ids: Optional[list] = None
         panels_to_regen = [p for p in panels_to_regen if p["id"] in panel_ids]
 
     for panel in panels_to_regen:
-        narration = await _generate_panel_text(state, panel)
-        image_url = await _generate_panel_image(state, panel, narration)
+        # Use the two-step premium process: 
+        # 1. Gemini for narration | 2. Imagen 3 for imagery
+        try:
+            narration = await _generate_panel_text(state, panel)
+            image_url = await _generate_panel_image(state, panel, narration)
+        except Exception as e:
+            log.error(f"Regen failed for {panel['id']}: {e}")
+            narration = "..."
+            image_url = f"/api/placeholder/{panel['id']}"
+
         yield {
             "type": SSE_PANEL_TEXT,
             "panel_id": panel["id"],
@@ -599,13 +834,6 @@ async def hitl_gate_node(state: StudioState) -> dict:
     The graph is compiled with interrupt_before=["hitl_gate_node"].
     Actual approval logic is handled by /api/resume via graph.update_state().
     """
-    # Save state to Redis for reconnect/resume
-    from main import save_state
-    save_state(state["session_id"], state)
-    
-    # Save Point 1: Create draft in Firestore
-    await save_script_draft(state["session_id"], state)
-
     return {
         "meta_commentary": [f"HITL: waiting for user approval of script (score: {state.get('script_score', '?')}/10)"],
     }
@@ -636,6 +864,7 @@ def _build_main_graph():
     builder = StateGraph(StudioState)
 
     # Add nodes
+    builder.add_node("historian_node", historian_node)
     builder.add_node("researcher_node", researcher_node)
     builder.add_node("location_scout_node", location_scout_node)
     builder.add_node("casting_director_node", casting_director_node)
@@ -645,9 +874,11 @@ def _build_main_graph():
     builder.add_node("hitl_gate_node", hitl_gate_node)
     builder.add_node("pruner_node", pruner_node)
     builder.add_node("director_node", director_node)
+    builder.add_node("archivist_node", archivist_node)
 
     # Linear edges
-    builder.set_entry_point("researcher_node")
+    builder.set_entry_point("historian_node")
+    builder.add_edge("historian_node", "researcher_node")
     builder.add_edge("researcher_node", "location_scout_node")
     builder.add_edge("location_scout_node", "casting_director_node")
     builder.add_edge("casting_director_node", "sound_designer_node")
@@ -660,10 +891,11 @@ def _build_main_graph():
         "hitl_gate_node": "hitl_gate_node",
     })
 
-    # After HITL: pruner → director
+    # After HITL: pruner → director → archivist
     builder.add_edge("hitl_gate_node", "pruner_node")
     builder.add_edge("pruner_node", "director_node")
-    builder.add_edge("director_node", END)
+    builder.add_edge("director_node", "archivist_node")
+    builder.add_edge("archivist_node", END)
 
     # Compile with HITL interrupt + MemorySaver checkpointer (BUG 1 FIX)
     checkpointer = MemorySaver()
@@ -677,12 +909,15 @@ def _build_branch_graph():
     """Branch pipeline: Screenwriter → Script Doctor → Pruner → Director (skips HITL)."""
     builder = StateGraph(StudioState)
 
+    builder.add_node("historian_node", historian_node)
     builder.add_node("screenwriter_node", screenwriter_node)
     builder.add_node("script_doctor_node", script_doctor_node)
     builder.add_node("pruner_node", pruner_node)
     builder.add_node("director_node", director_node)
+    builder.add_node("archivist_node", archivist_node)
 
-    builder.set_entry_point("screenwriter_node")
+    builder.set_entry_point("historian_node")
+    builder.add_edge("historian_node", "screenwriter_node")
     builder.add_edge("screenwriter_node", "script_doctor_node")
 
     # Branches get max 1 revision loop
@@ -692,6 +927,31 @@ def _build_branch_graph():
     })
 
     builder.add_edge("pruner_node", "director_node")
-    builder.add_edge("director_node", END)
+    builder.add_edge("director_node", "archivist_node")
+    builder.add_edge("archivist_node", END)
 
     return builder.compile(checkpointer=MemorySaver())
+
+def _build_interleaved_prompt(state: StudioState, panel: dict) -> list:
+    """
+    Hackathon requirement: Build a prompt that forces the model to interleave
+    the narration text and the generated image into a single multimodal response stream.
+    """
+    characters = state.get("character_profiles", {})
+    style = state.get("visual_style_bible", "graphic novel, high contrast")
+    physics = panel.get("physics", "")
+    emotion = panel.get("emotion", "tense")
+    
+    char_desc = " ".join([
+        f"{name}: {', '.join(str(v) for v in attrs.values())[:100]}"
+        for name, attrs in list(characters.items())[:2]
+    ])
+
+    return [
+        "You are an avant-garde Graphic Novel Creative Director.",
+        "Your engine natively supports INTERLEAVED OUTPUT (text + image natively woven together).",
+        "For the following panel, I need exactly two parts in your single response:",
+        "1. Start by writing 2-3 sentences of evocative, cinematic narration.",
+        f"2. Immediately follow the text by generating the visual image for this panel inline. Visual Style: {style}. Lighting/Emotion: {emotion}. Physics: {physics}. Characters: {char_desc}",
+        f"Script context: {state['script_draft'][:1000]}"
+    ]

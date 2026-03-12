@@ -1,17 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Film02Icon, GitBranchIcon, FlashIcon, UserIcon, Logout01Icon, GoogleIcon } from "hugeicons-react";
+import { Film02Icon, FlashIcon, UserIcon, Logout01Icon, GoogleIcon } from "hugeicons-react";
 import { useAuth } from "../hooks/useAuth";
 import StarBorder from "./StarBorder";
 import { auth } from "../../lib/firebase";
 
 interface NavbarProps {
     sessionId?: string | null;
-    onGalleryClick?: () => void;
 }
 
-export default function Navbar({ sessionId, onGalleryClick }: NavbarProps) {
+export default function Navbar({ sessionId }: NavbarProps) {
     const [isHealthy, setIsHealthy] = useState<boolean | null>(null);
     const { user, signInWithGoogle, logout } = useAuth();
 
@@ -123,11 +122,6 @@ export default function Navbar({ sessionId, onGalleryClick }: NavbarProps) {
 
                 {/* Action Group */}
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    {/* Gallery button */}
-                    <button className="btn-ghost" onClick={onGalleryClick} style={{ fontSize: "12px", padding: "6px 12px" }}>
-                        <GitBranchIcon size={14} />
-                        Story Commits
-                    </button>
 
                     {/* Flash - Branch indicator */}
                     <div className="icon-base icon-idle" style={{ cursor: "default" }}>

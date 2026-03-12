@@ -39,7 +39,7 @@ async def save_script_draft(session_id: str, state: dict):
     try:
         from google.cloud.firestore import SERVER_TIMESTAMP
         db.collection("commits").document(session_id).set({
-            "user_id":            FIRESTORE_DEMO_USER,
+            "user_id":            state.get("user_id", FIRESTORE_DEMO_USER),
             "prompt":             state.get("user_prompt", ""),
             "pipeline_template":  state.get("pipeline_template", "default"),
             "script_draft":       state.get("script_draft", ""),
@@ -108,3 +108,71 @@ async def get_gallery():
     except Exception as e:
         log.error(f"Firestore get_gallery failed: {e}")
         return []
+
+
+# ─── Multiverse Ledger ────────────────────────────────────────────────────────
+
+async def search_multiverse_lore(query_keywords: list[str]):
+    """
+    Historian Node Service: Search for entities in the multiverse ledger.
+    Matches against 'name' or 'aliases' tags.
+    """
+    db = _get_db()
+    if db is None:
+        return []
+
+    results = []
+    try:
+        # Note: Firestore doesn't support easy multi-OR across fields without complicated queries.
+        # For this hackathon, we'll do a simple 'name' search or 'tags' array-contains.
+        for kw in query_keywords:
+            # Case-insensitive-ish: we assume lowercase in ledger
+            docs = db.collection("multiverse_ledger").where("name", "==", kw.lower()).stream()
+            for doc in docs:
+                results.append(doc.to_dict())
+            
+            # Also check tags
+            tag_docs = db.collection("multiverse_ledger").where("tags", "array_contains", kw.lower()).stream()
+            for doc in tag_docs:
+                results.append(doc.to_dict())
+                
+        # Deduplicate by name
+        seen = set()
+        unique_results = []
+        for r in results:
+            if r["name"] not in seen:
+                unique_results.append(r)
+                seen.add(r["name"])
+        return unique_results
+    except Exception as e:
+        log.error(f"Firestore search_multiverse_lore failed: {e}")
+        return []
+
+
+async def commit_to_multiverse(entities: list[dict]):
+    """
+    Archivist Node Service: Upsert entities into the multiverse ledger.
+    Entities: [{name, lore_summary, tags, status, session_id}]
+    """
+    db = _get_db()
+    if db is None:
+        return
+
+    try:
+        batch = db.batch()
+        for ent in entities:
+            name_id = ent["name"].lower().replace(" ", "_")
+            doc_ref = db.collection("multiverse_ledger").document(name_id)
+            
+            # Merge logic: if exists, update summary, add tags
+            # For hackathon simplicity, we just set (overwrite or create)
+            batch.set(doc_ref, {
+                **ent,
+                "name": ent["name"].lower(), 
+                "tags": [t.lower() for t in ent.get("tags", [])]
+            }, merge=True)
+            
+        batch.commit()
+        log.info(f"Firestore Archivist: committed {len(entities)} entities to Lore Ledger")
+    except Exception as e:
+        log.error(f"Firestore commit_to_multiverse failed: {e}")

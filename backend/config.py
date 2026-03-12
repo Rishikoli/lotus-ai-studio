@@ -7,10 +7,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # ─── API Keys & Models ─────────────────────────────────────────────────────────
-GEMINI_API_KEY    = os.getenv("GEMINI_API_KEY", "")
 INTERNAL_API_KEY  = os.getenv("INTERNAL_API_KEY", "lotus-demo-key")
 PIPELINE_MODEL    = os.getenv("PIPELINE_MODEL", "gemini-2.5-flash")
-DIRECTOR_MODEL    = os.getenv("DIRECTOR_MODEL", "gemini-2.0-flash-exp")
+DIRECTOR_MODEL    = os.getenv("DIRECTOR_MODEL", "gemini-2.5-flash")
 DIRECTOR_MODE     = os.getenv("DIRECTOR_MODE", "interleaved")  # "interleaved" | "sequential"
 
 # ─── Redis ────────────────────────────────────────────────────────────────────
@@ -81,6 +80,7 @@ def build_template_system_prompt(template_name: str) -> str:
 # ─── SSE Event Types ──────────────────────────────────────────────────────────
 # These string keys define the SSE protocol between backend and frontend.
 SSE_META          = "meta"          # Agent status updates → PipelineVisualizer
+SSE_AUDIO_VIBE    = "audio_vibe"    # Global background music category
 SSE_SCRIPT        = "script"        # Streaming script draft text
 SSE_HITL_PAUSE    = "hitl_pause"    # Signals frontend to show ScriptApprovalModal
 SSE_PANEL_SCHEMA  = "panel_schema"  # Director's first event → pre-build panel grid
@@ -90,3 +90,9 @@ SSE_PANEL_AUDIO   = "panel_audio"   # Audio data for a panel
 SSE_PANEL_DONE    = "panel_done"    # Panel fully complete
 SSE_DONE          = "done"          # Entire generation complete
 SSE_ERROR         = "error"         # Node failed with graceful degradation
+
+PIPELINE_NODE_IDS = [
+    "historian_node", "researcher_node", "location_scout_node", "casting_director_node",
+    "sound_designer_node", "screenwriter_node", "script_doctor_node",
+    "pruner_node", "director_node", "archivist_node"
+]

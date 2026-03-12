@@ -4,6 +4,7 @@
 
 export type SSEChunkType =
     | "meta"
+    | "audio_vibe"
     | "script"
     | "hitl_pause"
     | "panel_schema"
@@ -11,6 +12,7 @@ export type SSEChunkType =
     | "panel_image"
     | "panel_audio"
     | "panel_done"
+    | "character_profiles"
     | "done"
     | "error";
 
@@ -21,6 +23,11 @@ export interface MetaChunk {
     duration_ms: number;
     content: string;
     branch_id?: string;
+}
+
+export interface AudioVibeChunk {
+    type: "audio_vibe";
+    vibe: string;
 }
 
 export interface ScriptChunk {
@@ -57,13 +64,27 @@ export interface PanelImageChunk {
     physics: string;
     emotion: string;
     layout: PanelLayout;
+    sfx_cue: string;
     branch_id?: string;
 }
+
+export interface PanelAudioChunk {
+    type: "panel_audio";
+    panel_id: string;
+    audio_url: string;
+    branch_id?: string;
+}
+
 
 export interface PanelDoneChunk {
     type: "panel_done";
     panel_id: string;
     branch_id?: string;
+}
+
+export interface CharacterProfilesChunk {
+    type: "character_profiles";
+    profiles: Record<string, any>;
 }
 
 export interface DoneChunk {
@@ -80,12 +101,15 @@ export interface ErrorChunk {
 
 export type SSEChunk =
     | MetaChunk
+    | AudioVibeChunk
     | ScriptChunk
     | HitlPauseChunk
     | PanelSchemaChunk
     | PanelTextChunk
     | PanelImageChunk
+    | PanelAudioChunk
     | PanelDoneChunk
+    | CharacterProfilesChunk
     | DoneChunk
     | ErrorChunk;
 
@@ -109,6 +133,7 @@ export interface PanelObject {
     emotion: PanelEmotion;
     physics: string;         // "rain:heavy", "lightning:strobe", ""
     aspect_ratio?: string;   // "16:9", "2.39:1", "1:1"
+    sfx_cue?: string;        // "explosion", "thunder", etc.
 }
 
 export interface StoryPanel extends PanelObject {
@@ -133,14 +158,16 @@ export interface PipelineNode {
 }
 
 export const PIPELINE_NODES: Omit<PipelineNode, "status">[] = [
-    { id: "researcher_node", label: "Researcher", position: { x: 0, y: 0 } },
-    { id: "location_scout_node", label: "Location Scout", position: { x: 1, y: 0 } },
-    { id: "casting_director_node", label: "Casting Director", position: { x: 2, y: 0 } },
-    { id: "sound_designer_node", label: "Sound Designer", position: { x: 3, y: 0 } },
-    { id: "screenwriter_node", label: "Screenwriter", position: { x: 4, y: 0 } },
-    { id: "script_doctor_node", label: "Script Doctor", position: { x: 5, y: 0 } },
-    { id: "pruner_node", label: "Pruner", position: { x: 6, y: 0 } },
-    { id: "director_node", label: "Director", position: { x: 7, y: 0 } },
+    { id: "historian_node", label: "Historian", position: { x: 0, y: 0 } },
+    { id: "researcher_node", label: "Researcher", position: { x: 1, y: 0 } },
+    { id: "location_scout_node", label: "Location Scout", position: { x: 2, y: 0 } },
+    { id: "casting_director_node", label: "Casting Director", position: { x: 3, y: 0 } },
+    { id: "sound_designer_node", label: "Sound Designer", position: { x: 4, y: 0 } },
+    { id: "screenwriter_node", label: "Screenwriter", position: { x: 5, y: 0 } },
+    { id: "script_doctor_node", label: "Script Doctor", position: { x: 6, y: 0 } },
+    { id: "pruner_node", label: "Pruner", position: { x: 7, y: 0 } },
+    { id: "director_node", label: "Director", position: { x: 8, y: 0 } },
+    { id: "archivist_node", label: "Archivist", position: { x: 9, y: 0 } },
 ];
 
 // ─── Pipeline Templates ────────────────────────────────────────────────────────
@@ -180,8 +207,18 @@ export interface StudioUIState {
     branch_panels: StoryPanel[];    // alternate universe panels
     branch_id: string | null;
     pipeline_nodes: PipelineNode[];
+    audio_vibe: string | null;
     script_draft: string;
     branch_script_draft: string;    // alternate version for diffing
     meta_log: MetaChunk[];
+    character_profiles: Record<string, any>;
     error: string | null;
+}
+
+// ─── Agentic Audience ────────────────────────────────────────────────────────
+
+export interface InterrogationMessage {
+    role: "user" | "character";
+    content: string;
+    timestamp: number;
 }

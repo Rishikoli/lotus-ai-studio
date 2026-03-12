@@ -46,3 +46,24 @@ async def upload_panel_image(session_id: str, panel_id: str, image_bytes: bytes)
     except Exception as e:
         log.error(f"Failed to upload {panel_id}: {e}")
         return f"/placeholder/{session_id}/{panel_id}"
+
+
+async def upload_panel_audio(session_id: str, panel_id: str, audio_bytes: bytes) -> str:
+    """
+    Upload a panel narration audio file to Cloud Storage.
+    """
+    bucket = _get_bucket()
+    if bucket is None:
+        return ""
+
+    try:
+        blob_name = f"{session_id}/{panel_id}.mp3"
+        blob = bucket.blob(blob_name)
+        blob.upload_from_string(audio_bytes, content_type="audio/mpeg")
+        blob.make_public()
+        url = blob.public_url
+        log.info(f"Uploaded panel audio: {url}")
+        return url
+    except Exception as e:
+        log.error(f"Failed to upload audio {panel_id}: {e}")
+        return ""

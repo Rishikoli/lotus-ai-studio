@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CheckmarkCircle01Icon, Cancel01Icon, Edit01Icon, Notes01Icon } from "hugeicons-react";
+import { CheckmarkCircle01Icon, Cancel01Icon, Edit01Icon } from "hugeicons-react";
 
 interface ScriptApprovalModalProps {
     sessionId: string;
@@ -71,7 +71,7 @@ export default function ScriptApprovalModal({
                 >
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         <div className="icon-base icon-active">
-                            <Notes01Icon size={18} />
+                            <Edit01Icon size={18} />
                         </div>
                         <div>
                             <h2

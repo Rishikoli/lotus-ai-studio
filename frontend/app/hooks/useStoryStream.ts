@@ -12,6 +12,7 @@ import type {
     SSEChunk, StoryPanel, PipelineNode, MetaChunk, StudioUIState,
 } from "../types";
 import { PIPELINE_NODES } from "../types";
+import { useAuth } from "./useAuth";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? "lotus-demo-key";
@@ -21,6 +22,8 @@ function makeInitialPipelineNodes(): PipelineNode[] {
 }
 
 export function useStoryStream() {
+    const { user } = useAuth();
+    
     const [state, setState] = useState<StudioUIState>({
         phase: "idle",
         session_id: null,
@@ -28,9 +31,11 @@ export function useStoryStream() {
         branch_panels: [],
         branch_id: null,
         pipeline_nodes: makeInitialPipelineNodes(),
+        audio_vibe: null,
         script_draft: "",
         branch_script_draft: "",
         meta_log: [],
+        character_profiles: {},
         error: null,
     });
 
@@ -90,6 +95,7 @@ export function useStoryStream() {
             branch_panels: [],
             branch_id: null,
             pipeline_nodes: makeInitialPipelineNodes(),
+            audio_vibe: null,
             script_draft: "",
             branch_script_draft: "",
             meta_log: [],
@@ -103,7 +109,12 @@ export function useStoryStream() {
                     "Content-Type": "application/json",
                     "X-API-Key": API_KEY,
                 },
-                body: JSON.stringify({ prompt, pipeline_template: template, user_sketch_b64: sketchB64 }),
+                body: JSON.stringify({ 
+                    prompt, 
+                    pipeline_template: template, 
+                    user_sketch_b64: sketchB64,
+                    user_id: user?.uid || "demo_user"
+                }),
                 signal: abortRef.current.signal,
             });
 
@@ -142,7 +153,12 @@ export function useStoryStream() {
         const res = await fetch(`${API_URL}/api/resume`, {
             method: "POST",
             headers: { "Content-Type": "application/json", "X-API-Key": API_KEY },
-            body: JSON.stringify({ session_id, action, user_edits: userEdits }),
+            body: JSON.stringify({ 
+                session_id, 
+                action, 
+                user_edits: userEdits,
+                user_id: user?.uid || "demo_user"
+            }),
         });
 
         await parseStream(res, false);
@@ -157,7 +173,12 @@ export function useStoryStream() {
         const res = await fetch(`${API_URL}/api/branch`, {
             method: "POST",
             headers: { "Content-Type": "application/json", "X-API-Key": API_KEY },
-            body: JSON.stringify({ session_id, branch_point_panel_id, branch_direction }),
+            body: JSON.stringify({ 
+                session_id, 
+                branch_point_panel_id, 
+                branch_direction,
+                user_id: user?.uid || "demo_user"
+            }),
         });
 
         const branchId = res.headers.get("X-Branch-Id");
@@ -177,18 +198,43 @@ export function useStoryStream() {
         const res = await fetch(`${API_URL}/api/director_cut`, {
             method: "POST",
             headers: { "Content-Type": "application/json", "X-API-Key": API_KEY },
-            body: JSON.stringify({ session_id, feedback, panel_ids: panelIds }),
+            body: JSON.stringify({ 
+                session_id, 
+                feedback, 
+                panel_ids: panelIds,
+                user_id: user?.uid || "demo_user"
+            }),
         });
 
         await parseStream(res, false);
     }, [parseStream]);
+
+    const applyNegotiation = useCallback(async (
+        session_id: string,
+        characterName: string,
+        outcome: string,
+        influence: string,
+    ) => {
+        const res = await fetch(`${API_URL}/api/apply_negotiation`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-API-Key": API_KEY },
+            body: JSON.stringify({ 
+                session_id, 
+                character_name: characterName, 
+                outcome, 
+                influence_directive: influence,
+                user_id: user?.uid || "demo_user"
+            }),
+        });
+        return await res.json();
+    }, [user]);
 
     const stop = useCallback(() => {
         abortRef.current?.abort();
         setState(prev => ({ ...prev, phase: "idle" }));
     }, []);
 
-    return { state, generate, resume, createBranch, directorCut, stop };
+    return { state, generate, resume, createBranch, directorCut, applyNegotiation, stop };
 }
 
 // ─── State Reducer ─────────────────────────────────────────────────────────
@@ -206,6 +252,20 @@ function applyChunk(prev: StudioUIState, chunk: SSEChunk, isBranch: boolean): St
                 ...prev,
                 pipeline_nodes: nodes,
                 meta_log: [...prev.meta_log, meta],
+            };
+        }
+
+        case "audio_vibe": {
+            return {
+                ...prev,
+                audio_vibe: chunk.vibe,
+            };
+        }
+
+        case "character_profiles": {
+            return {
+                ...prev,
+                character_profiles: chunk.profiles,
             };
         }
 
@@ -249,8 +309,18 @@ function applyChunk(prev: StudioUIState, chunk: SSEChunk, isBranch: boolean): St
                 ...prev,
                 [target]: prev[target].map(p =>
                     p.id === chunk.panel_id
-                        ? { ...p, image_url: chunk.image_url, emotion: chunk.emotion, physics: chunk.physics, layout: chunk.layout }
+                        ? { ...p, image_url: chunk.image_url, emotion: chunk.emotion, physics: chunk.physics, layout: chunk.layout, sfx_cue: chunk.sfx_cue }
                         : p
+                ),
+            };
+        }
+
+        case "panel_audio": {
+            const target = isBranch ? "branch_panels" : "panels";
+            return {
+                ...prev,
+                [target]: prev[target].map(p =>
+                    p.id === chunk.panel_id ? { ...p, audio_url: chunk.audio_url } : p
                 ),
             };
         }
@@ -270,12 +340,16 @@ function applyChunk(prev: StudioUIState, chunk: SSEChunk, isBranch: boolean): St
         }
 
         case "error": {
-            // Non-fatal: log to meta, don't kill phase
             const errorMeta: MetaChunk = {
                 type: "meta", node: chunk.node, status: "error",
                 duration_ms: 0, content: chunk.content,
             };
-            return { ...prev, meta_log: [...prev.meta_log, errorMeta] };
+            return { 
+                ...prev, 
+                phase: "error",
+                error: chunk.content,
+                meta_log: [...prev.meta_log, errorMeta] 
+            };
         }
 
         case "script": {

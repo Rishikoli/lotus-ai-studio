@@ -17,11 +17,11 @@ from pydantic import BaseModel
 
 from config import (
     INTERNAL_API_KEY, REDIS_HOST, REDIS_PORT, REDIS_TTL,
-    SSE_META, SSE_HITL_PAUSE, SSE_PANEL_SCHEMA, SSE_DONE, SSE_ERROR,
-    PIPELINE_TEMPLATES,
+    SSE_META, SSE_AUDIO_VIBE, SSE_HITL_PAUSE, SSE_PANEL_SCHEMA, SSE_DONE, SSE_ERROR,
+    PIPELINE_TEMPLATES, PIPELINE_NODE_IDS,
 )
 from state import StudioState, make_initial_state
-from services.firestore import update_branch_ids
+from services.firestore import update_branch_ids, save_script_draft
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("lotus")
@@ -34,6 +34,7 @@ app.add_middleware(
     allow_origins=["*"],   # Lock to frontend domain in production
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # ─── Redis ────────────────────────────────────────────────────────────────────
@@ -107,24 +108,44 @@ class GenerateRequest(BaseModel):
     prompt: str
     pipeline_template: str = "default"
     user_sketch_b64: Optional[str] = None
+    user_id: str = "demo_user"
 
 
 class ResumeRequest(BaseModel):
     session_id: str
     action: str          # "approve" | "edit" | "reject"
     user_edits: Optional[str] = None
+    user_id: str = "demo_user"
 
 
 class DirectorCutRequest(BaseModel):
     session_id: str
     feedback: str
     panel_ids: Optional[list[str]] = None   # None = regenerate all panels
+    user_id: str = "demo_user"
 
 
 class BranchRequest(BaseModel):
     session_id: str
     branch_point_panel_id: str
     branch_direction: str    # "darker" | "hopeful" | "comedic" | "chaotic"
+    user_id: str = "demo_user"
+
+
+class InterrogateRequest(BaseModel):
+    session_id: str
+    character_name: str
+    user_message: str
+    chat_history: Optional[list[dict]] = []  # [{"role": "user", "content": "..."}, ...]
+    user_id: str = "demo_user"
+
+
+class ApplyNegotiationRequest(BaseModel):
+    session_id: str
+    character_name: str
+    outcome: str            # Summarized outcome: e.g. "Hero bribed the guard"
+    influence_directive: str # How it should affect the script: e.g. "The guard now helps the hero."
+    user_id: str = "demo_user"
 
 
 # ─── Endpoints ────────────────────────────────────────────────────────────────
@@ -155,6 +176,7 @@ async def generate(body: GenerateRequest, _auth=Depends(verify_api_key)):
         session_id=session_id,
         pipeline_template=body.pipeline_template,
         sketch_b64=body.user_sketch_b64,
+        user_id=body.user_id,
     )
 
     return StreamingResponse(
@@ -258,6 +280,71 @@ async def branch(body: BranchRequest, _auth=Depends(verify_api_key)):
     )
 
 
+@app.post("/api/interrogate")
+async def interrogate(body: InterrogateRequest, _auth=Depends(verify_api_key)):
+    """
+    Live character interrogation.
+    Gemini roleplays based on the character's profile and script draft.
+    """
+    state = load_state(body.session_id)
+    char_profile = state.get("character_profiles", {}).get(body.character_name, {})
+    if not char_profile:
+        # Fallback to generic profile
+        char_profile = {"name": body.character_name, "role": "supporting character"}
+
+    system = f"""You are roleplaying as {body.character_name}. 
+Your Persona: {json.dumps(char_profile)}
+Story Context: {state.get("script_draft", "")[:2000]}
+
+Guidelines:
+1. Stay in character! Use their specific tone, biases, and goals.
+2. If the story has already established a fact about you, do not contradict it.
+3. Be brief but evocative.
+4. You don't know the future, only what has happened in the script so far."""
+
+    from graph import call_gemini
+    
+    # Reconstruct history for context
+    history_str = "\n".join([f"{m['role']}: {m['content']}" for m in body.chat_history[-5:]])
+    prompt = f"{history_str}\nuser: {body.user_message}\n{body.character_name}:"
+
+    response = await call_gemini(
+        system=system,
+        user_prompt=prompt,
+        temperature=0.9, # Higher for personality
+    )
+    
+    return {"message": response}
+
+
+@app.post("/api/apply_negotiation")
+async def apply_negotiation(body: ApplyNegotiationRequest, _auth=Depends(verify_api_key)):
+    """
+    Saves a negotiation outcome to the state.
+    This will be injected into the Screenwriter and Script Doctor in subsequent nodes.
+    """
+    state = load_state(body.session_id)
+    
+    outcome_entry = {
+        "character": body.character_name,
+        "outcome": body.outcome,
+        "influence": body.influence_directive,
+        "timestamp": time.time()
+    }
+    
+    if "negotiation_outcomes" not in state:
+        state["negotiation_outcomes"] = []
+    
+    state["negotiation_outcomes"].append(outcome_entry)
+    
+    # Also inject into meta commentary for visibility
+    if "meta_commentary" not in state: state["meta_commentary"] = []
+    state["meta_commentary"].append(f"Negotiation Applied: {body.character_name} -> {body.outcome}")
+    
+    save_state(body.session_id, state)
+    return {"status": "success", "session_id": body.session_id}
+
+
 @app.get("/api/stream/{session_id}")
 async def stream_reconnect(session_id: str, _auth=Depends(verify_api_key)):
     """
@@ -292,9 +379,26 @@ async def _run_pipeline(state: StudioState):
 
     try:
         async for event in graph.astream_events(state, config=config, version="v2"):
-            chunk = _parse_langgraph_event(event)
-            if chunk:
+            chunks = _parse_langgraph_event(event)
+            for chunk in chunks:
                 yield sse(chunk)
+                
+        # LangGraph pauses BEFORE hitl_gate_node executes. We must persist state here
+        # so /api/resume can pick it up from Redis.
+        snapshot = graph.get_state(config)
+        if snapshot and snapshot.values:
+            save_state(state["session_id"], snapshot.values)
+            await save_script_draft(state["session_id"], snapshot.values)
+            
+            # If we are at the HITL interrupt, notify the frontend
+            if snapshot.next and "hitl_gate_node" in snapshot.next:
+                yield sse({
+                    "type": SSE_HITL_PAUSE,
+                    "session_id": state["session_id"],
+                    "script_draft": snapshot.values.get("script_draft", ""),
+                    "script_score": snapshot.values.get("script_score", 0),
+                })
+            
     except Exception as e:
         log.error(f"Pipeline error: {e}")
         yield sse_error("pipeline", str(e))
@@ -314,8 +418,8 @@ async def _resume_pipeline(state: StudioState):
             "script_draft": state.get("script_draft", ""),
         })
         async for event in graph.astream_events(None, config=config, version="v2"):
-            chunk = _parse_langgraph_event(event)
-            if chunk:
+            chunks = _parse_langgraph_event(event)
+            for chunk in chunks:
                 yield sse(chunk)
     except Exception as e:
         log.error(f"Resume error: {e}")
@@ -342,8 +446,8 @@ async def _run_branch_pipeline(state: StudioState):
 
     try:
         async for event in graph.astream_events(state, config=config, version="v2"):
-            chunk = _parse_langgraph_event(event)
-            if chunk:
+            chunks = _parse_langgraph_event(event)
+            for chunk in chunks:
                 # Tag all events with branch_id so frontend routes to right column
                 chunk["branch_id"] = state["branch_id"]
                 yield sse(chunk)
@@ -352,36 +456,57 @@ async def _run_branch_pipeline(state: StudioState):
         yield sse_error("branch_pipeline", str(e))
 
 
-def _parse_langgraph_event(event: dict) -> Optional[dict]:
+def _parse_langgraph_event(event: dict) -> list[dict]:
     """
     Parse a raw LangGraph astream_events event into our SSE chunk format.
-    Returns None for events we don't want to forward to the frontend.
+    Returns a list of chunks (often 0 or 1, occasionally 2).
     """
     kind = event.get("event", "")
+    chunks = []
 
-    # Custom events emitted by nodes via astream_events
-    if kind == "on_custom_event":
-        return event.get("data", {})
+    # Custom events OR node yields (on_chain_stream)
+    if kind in ("on_custom_event", "on_chain_stream"):
+        data = event.get("data", {})
+        # For chain stream, 'chunk' contains the yielded value
+        if kind == "on_chain_stream":
+            chunk = data.get("chunk")
+            if isinstance(chunk, dict) and "type" in chunk:
+                chunks.append(chunk)
+        else:
+            chunks.append(data)
+
+    # Chain / node starts for meta tracking (UI feedback)
+    if kind == "on_chain_start":
+        name = event.get("name", "")
+        if name in PIPELINE_NODE_IDS:
+            chunks.append({
+                "type": SSE_META,
+                "node": name,
+                "status": "running",
+                "duration_ms": 0,
+                "content": f"{name} working...",
+            })
 
     # Chain / node completions for meta tracking
     if kind in ("on_chain_end", "on_tool_end"):
         name = event.get("name", "")
         output = event.get("data", {}).get("output", {})
         
-        # If screenwriter finished, stream the script draft (useful for branches)
+        # If screenwriter finished, stream the script draft
         if name == "screenwriter_node" and isinstance(output, dict) and "script_draft" in output:
-            return {
+            chunks.append({
                 "type": "script",
                 "content": output["script_draft"],
                 "node": name
-            }
+            })
 
-        return {
+        # Also emit standard meta-completion event
+        chunks.append({
             "type": SSE_META,
             "node": name,
             "status": "complete",
             "duration_ms": 0,
             "content": f"{name} complete",
-        }
+        })
 
-    return None
+    return chunks

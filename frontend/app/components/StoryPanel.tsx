@@ -1,6 +1,5 @@
 "use client";
-
-import { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import type { StoryPanel as StoryPanelType } from "../types";
 import {
     MoreVerticalCircle01Icon,
@@ -8,7 +7,9 @@ import {
     Moon02Icon,
     Sun01Icon,
     LaughingIcon,
-    FlashIcon
+    FlashIcon,
+    VolumeHighIcon,
+    VolumeOffIcon
 } from "hugeicons-react";
 import SceneCanvas from "./SceneCanvas";
 
@@ -39,9 +40,36 @@ const EMOTION_OVERLAYS: Record<string, string> = {
 
 export default function StoryPanel({ panel, sessionId, onBranch, isBranch }: StoryPanelProps) {
     const [showBranchMenu, setShowBranchMenu] = useState(false);
+    const [isMuted, setIsMuted] = useState(false);
+    const hasSpoken = useRef(false);
 
     const layoutClass = `panel-${panel.layout.replace(/_/g, "-")}`;
     const emotionOverlay = EMOTION_OVERLAYS[panel.emotion] ?? "none";
+
+    // Automatic Narration (Web Speech API)
+    useEffect(() => {
+        if (!panel.narration || panel.is_loading || isMuted || hasSpoken.current) return;
+
+        // Give the UI a moment to settle
+        const timeout = setTimeout(() => {
+            const utterance = new SpeechSynthesisUtterance(panel.narration!);
+            
+            // Premium Voice Selection (attempt to find a cinematic voice)
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(v => 
+                v.name.includes("Google") || v.name.includes("Premium") || v.name.includes("Natural")
+            );
+            
+            if (preferredVoice) utterance.voice = preferredVoice;
+            utterance.pitch = 0.9; // Slightly deeper for cinematic feel
+            utterance.rate = 0.95; // Slightly slower for dramatic effect
+            
+            window.speechSynthesis.speak(utterance);
+            hasSpoken.current = true;
+        }, 800);
+
+        return () => clearTimeout(timeout);
+    }, [panel.narration, panel.is_loading, isMuted]);
 
     return (
         <div
@@ -82,6 +110,20 @@ export default function StoryPanel({ panel, sessionId, onBranch, isBranch }: Sto
             ) : panel.image_url ? (
                 <SceneCanvas panel={panel} />
             ) : null}
+
+            {/* Audio Controls */}
+            <div style={{ position: "absolute", top: "8px", left: isBranch ? "80px" : "8px", zIndex: 10 }}>
+                <button 
+                    className="btn-ghost"
+                    style={{ padding: "4px", background: "rgba(0,0,0,0.4)" }}
+                    onClick={() => {
+                        setIsMuted(!isMuted);
+                        if (!isMuted) window.speechSynthesis.cancel();
+                    }}
+                >
+                    {isMuted ? <VolumeOffIcon size={14} color="#E05252" /> : <VolumeHighIcon size={14} color="var(--gold-bright)" />}
+                </button>
+            </div>
 
             {/* Bottom narration strip */}
             <div

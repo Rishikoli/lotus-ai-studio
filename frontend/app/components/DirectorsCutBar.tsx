@@ -3,20 +3,23 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-    AiVideoIcon,
+    Tv01Icon as AiVideoIcon,
     RefreshIcon,
     Tick01Icon,
     CircleIcon,
     AlertCircleIcon
 } from "hugeicons-react";
+import MovieExport from "./MovieExport";
+import { StoryPanel } from "../types";
 
 interface DirectorsCutBarProps {
     sessionId: string;
-    panels: { id: string; narration?: string }[];
+    panels: StoryPanel[];
+    vibe?: string | null;
     onReshoot: (panelIds: string[], feedback: string) => Promise<void>;
 }
 
-export default function DirectorsCutBar({ sessionId, panels, onReshoot }: DirectorsCutBarProps) {
+export default function DirectorsCutBar({ sessionId, panels, vibe, onReshoot }: DirectorsCutBarProps) {
     const [selectedPanels, setSelectedPanels] = useState<string[]>([]);
     const [feedback, setFeedback] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -138,6 +141,8 @@ export default function DirectorsCutBar({ sessionId, panels, onReshoot }: Direct
                                 }}
                             />
                         </div>
+                        
+                        <MovieExport panels={panels} sessionId={sessionId} vibe={vibe} />
 
                         <button
                             className="glow-box"

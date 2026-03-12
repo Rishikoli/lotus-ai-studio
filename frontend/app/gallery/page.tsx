@@ -21,20 +21,27 @@ import {
     HourglassIcon
 } from "hugeicons-react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "../hooks/useAuth";
 
 export default function GalleryPage() {
+    const { user, loading: authLoading } = useAuth();
     const [stories, setStories] = useState<StoryCommit[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const router = useRouter();
 
     useEffect(() => {
-        // demo_user is hardcoded in the backend service
-        const FIRESTORE_DEMO_USER = "demo_user";
+        if (authLoading) return;
+        
+        if (!user) {
+            setStories([]);
+            setLoading(false);
+            return;
+        }
 
         const q = query(
             collection(db, "commits"),
-            where("user_id", "==", FIRESTORE_DEMO_USER),
+            where("user_id", "==", user.uid),
             orderBy("created_at", "desc"),
             limit(50)
         );
@@ -43,7 +50,6 @@ export default function GalleryPage() {
             const items = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data(),
-                // Convert Firestore timestamp to JS Date if needed
                 created_at: doc.data().created_at?.toDate() || new Date(),
             } as StoryCommit));
 
@@ -55,7 +61,7 @@ export default function GalleryPage() {
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [user, authLoading]);
 
     const filteredStories = stories.filter(s =>
         s.prompt.toLowerCase().includes(searchTerm.toLowerCase())
@@ -63,7 +69,7 @@ export default function GalleryPage() {
 
     return (
         <main style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-            <Navbar onGalleryClick={() => { }} />
+            <Navbar />
 
             <div style={{
                 flex: 1,

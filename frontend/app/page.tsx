@@ -6,28 +6,36 @@ import TemplatePicker from "./components/TemplatePicker";
 import PipelineVisualizer from "./components/PipelineVisualizer";
 import ScriptApprovalModal from "./components/ScriptApprovalModal";
 import StoryPanel from "./components/StoryPanel";
+import BackgroundMusic from "./components/BackgroundMusic";
 import MetaSidebar from "./components/MetaSidebar";
 import DirectorsCutBar from "./components/DirectorsCutBar";
 import StoryDiff from "./components/StoryDiff";
+import InterrogationTerminal from "./components/InterrogationTerminal";
 import { useStoryStream } from "./hooks/useStoryStream";
 import type { PipelineTemplate } from "./types";
-import { PlayIcon, StopIcon, Message01Icon, AiBrain01Icon, Alert01Icon } from "hugeicons-react";
+import { PlayIcon, StopIcon, Message01Icon, AiBrain01Icon, Alert01Icon, GitBranchIcon, UserIcon } from "hugeicons-react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import StarBorder from "./components/StarBorder";
 
 export default function Home() {
-    const { state, generate, resume, createBranch, directorCut, stop } = useStoryStream();
+    const { state, generate, resume, createBranch, directorCut, applyNegotiation, stop } = useStoryStream();
     const [prompt, setPrompt] = useState("");
     const [template, setTemplate] = useState<PipelineTemplate>("default");
     const [showPipeline, setShowPipeline] = useState(false);
     const [showLogs, setShowLogs] = useState(false);
     const [viewMode, setViewMode] = useState<"panels" | "script">("panels");
+    const [interrogatingCharacter, setInterrogatingCharacter] = useState<string | null>(null);
     const router = useRouter();
 
     const handleGenerate = () => {
         if (!prompt.trim()) return;
         generate(prompt, template);
+    };
+
+    const handleApplyNegotiation = async (outcome: string, influence: string) => {
+        if (!state.session_id || !interrogatingCharacter) return;
+        await applyNegotiation(state.session_id, interrogatingCharacter, outcome, influence);
     };
 
     const isIdle = state.phase === "idle";
@@ -44,7 +52,6 @@ export default function Home() {
         >
             <Navbar
                 sessionId={state.session_id}
-                onGalleryClick={() => router.push("/gallery")}
             />
 
             <AnimatePresence>
@@ -130,15 +137,26 @@ export default function Home() {
                             <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "16px" }}>
                                 <TemplatePicker selected={template} onChange={setTemplate} />
 
-                                <button
-                                    className="btn-star-border"
-                                    onClick={handleGenerate}
-                                    disabled={!prompt.trim() || isGenerating}
-                                    style={{ padding: "12px 32px", fontSize: "15px", whiteSpace: "nowrap" }}
-                                >
-                                    <div className="icon-base icon-active"><PlayIcon size={16} /></div>
-                                    Generate Cinematic Story
-                                </button>
+                                <div style={{ display: "flex", gap: "12px" }}>
+                                    <button
+                                        className="btn-ghost"
+                                        onClick={() => router.push("/gallery")}
+                                        style={{ padding: "12px 20px", fontSize: "14px" }}
+                                    >
+                                        <GitBranchIcon size={16} />
+                                        Story Commits
+                                    </button>
+
+                                    <button
+                                        className="btn-star-border"
+                                        onClick={handleGenerate}
+                                        disabled={!prompt.trim() || isGenerating}
+                                        style={{ padding: "12px 32px", fontSize: "15px", whiteSpace: "nowrap" }}
+                                    >
+                                        <div className="icon-base icon-active"><PlayIcon size={16} /></div>
+                                        Generate Cinematic Story
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </StarBorder>
@@ -147,9 +165,9 @@ export default function Home() {
 
             {/* Studio Output Section */}
             {!isIdle && (
-                <div style={{ flex: 1, display: "flex", flexDirection: "column", padding: "32px 24px" }} className="animate-fade-in">
-
-                    {/* Header row: Status + Stop */}
+                <>
+                    <div style={{ flex: 1, display: "flex", flexDirection: "column", padding: "32px 24px" }} className="animate-fade-in">
+                        {/* Header row: Status + Stop */}
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "24px", maxWidth: "1200px", margin: "0 auto", width: "100%" }}>
 
                         <div style={{ flex: 1, display: "flex", gap: "16px", alignItems: "center" }}>
@@ -229,6 +247,60 @@ export default function Home() {
                             Halt Production
                         </button>
                     </div>
+
+                    {/* Cast Explorer: Interaction Hub */}
+                    {Object.keys(state.character_profiles).length > 0 && (
+                        <div 
+                            style={{ 
+                                display: "flex", 
+                                gap: "12px", 
+                                marginBottom: "32px", 
+                                maxWidth: "1200px", 
+                                margin: "0 auto 32px auto", 
+                                width: "100%",
+                                overflowX: "auto",
+                                padding: "8px 4px"
+                            }}
+                            className="animate-fade-in"
+                        >
+                            <div style={{ 
+                                display: "flex", 
+                                alignItems: "center", 
+                                gap: "10px", 
+                                marginRight: "12px",
+                                borderRight: "1px solid var(--border-subtle)",
+                                paddingRight: "16px"
+                            }}>
+                                <AiBrain01Icon size={16} className="text-gold-dim" />
+                                <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", letterSpacing: "0.2em", color: "var(--silver-dim)" }}>CAST</span>
+                            </div>
+                            {Object.keys(state.character_profiles).map(charName => (
+                                <motion.button
+                                    key={charName}
+                                    whileHover={{ scale: 1.05, y: -2 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => setInterrogatingCharacter(charName)}
+                                    className="glass-panel"
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "8px",
+                                        padding: "8px 16px",
+                                        borderRadius: "var(--radius-pill)",
+                                        border: "1px solid var(--gold-dim)",
+                                        background: "rgba(201, 168, 76, 0.05)",
+                                        cursor: "pointer",
+                                        whiteSpace: "nowrap"
+                                    }}
+                                >
+                                    <UserIcon size={14} className="text-gold" />
+                                    <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--gold-bright)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                                        {charName}
+                                    </span>
+                                </motion.button>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Main Content Area */}
                     <div style={{ maxWidth: "1200px", margin: "0 auto", width: "100%" }}>
@@ -328,12 +400,30 @@ export default function Home() {
                     {state.phase === "complete" && state.session_id && (
                         <DirectorsCutBar
                             sessionId={state.session_id}
-                            panels={state.panels.map(p => ({ id: p.id, narration: p.narration }))}
+                            panels={state.panels}
+                            vibe={state.audio_vibe}
                             onReshoot={(panelIds, feedback) => directorCut(state.session_id!, feedback, panelIds)}
                         />
                     )}
 
+                    {/* Agentic Audience: Interrogation Terminal */}
+                    <AnimatePresence>
+                        {interrogatingCharacter && state.session_id && (
+                            <InterrogationTerminal
+                                sessionId={state.session_id}
+                                characterName={interrogatingCharacter}
+                                onClose={() => setInterrogatingCharacter(null)}
+                                onApplyNegotiation={handleApplyNegotiation}
+                            />
+                        )}
+                    </AnimatePresence>
                 </div>
+
+                <BackgroundMusic 
+                    vibe={state.audio_vibe} 
+                    isGenerating={isGenerating} 
+                />
+                </>
             )}
         </main>
     );

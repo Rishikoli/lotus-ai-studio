@@ -11,12 +11,15 @@ class StudioState(TypedDict):
     user_prompt: str
     user_sketch_b64: Optional[str]       # Base64 JPEG from SketchPad canvas (max 200KB)
     session_id: str                       # UUID — used as LangGraph thread_id + Redis key
+    user_id: str                          # Firebase Auth UID
     pipeline_template: str               # "default" | "noir" | "epic_fantasy" | "comedy" | "horror"
 
     # ─── Loop Guard ─────────────────────────────────────────────────────────────
     max_revisions: int                    # Decremented each Script Doctor loop (default: 3)
 
     # ─── Node 1: Researcher ──────────────────────────────────────────────────────
+    multiverse_lore: List[dict]           # Shared lore from the World Ledger
+    negotiation_outcomes: List[dict]      # Interrogation results: {char, outcome, influence}
     world_bible: str                      # Comprehensive lore + world-building document
 
     # ─── Node 2: Location Scout ──────────────────────────────────────────────────
@@ -29,6 +32,7 @@ class StudioState(TypedDict):
 
     # ─── Node 4: Sound Designer ─────────────────────────────────────────────────
     audio_mood_board: str                # "120bpm, heavy synth bass, raining ambience"
+    audio_vibe: str                      # Selected category for background music
 
     # ─── Node 5: Screenwriter ───────────────────────────────────────────────────
     script_draft: str
@@ -62,21 +66,26 @@ def make_initial_state(
     session_id: str,
     pipeline_template: str = "default",
     sketch_b64: Optional[str] = None,
+    user_id: str = "demo_user",
 ) -> StudioState:
     """Always initialize with ALL fields so no node ever hits a KeyError."""
     return {
         "user_prompt": prompt,
         "user_sketch_b64": sketch_b64,
         "session_id": session_id,
+        "user_id": user_id,
         "pipeline_template": pipeline_template,
         "max_revisions": 3,
         # Node outputs — all empty until agents run
+        "multiverse_lore": [],
+        "negotiation_outcomes": [],
         "world_bible": "",
         "location_data": "",
         "scene_physics": "",
         "character_profiles": {},
         "visual_style_bible": "",
         "audio_mood_board": "",
+        "audio_vibe": "default",
         "script_draft": "",
         "emotion_arc": {},
         "script_score": 0,
