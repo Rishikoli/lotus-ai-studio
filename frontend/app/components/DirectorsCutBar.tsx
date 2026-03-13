@@ -175,32 +175,36 @@ export default function DirectorsCutBar({ sessionId, panels, vibe, onReshoot }: 
                 )}
             </AnimatePresence>
 
-            {/* Toggle Button */}
+            {/* Toggle Button & Quick Export */}
             {!isExpanded && (
-                <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsExpanded(true)}
-                    className="glow-box"
-                    style={{
-                        padding: "12px 24px",
-                        borderRadius: "30px",
-                        background: "rgba(201, 168, 76, 0.15)",
-                        border: "1px solid var(--gold-dim)",
-                        color: "var(--gold-bright)",
-                        backdropFilter: "blur(10px)",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                        fontSize: "13px",
-                        fontWeight: 600,
-                        letterSpacing: "0.05em",
-                        boxShadow: "0 10px 30px rgba(0,0,0,0.3)",
-                    }}
-                >
-                    <AiVideoIcon size={18} />
-                    ADJUST DIRECTOR'S CUT
-                </motion.button>
+                <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setIsExpanded(true)}
+                        className="glow-box"
+                        style={{
+                            padding: "12px 24px",
+                            borderRadius: "30px",
+                            background: "rgba(201, 168, 76, 0.15)",
+                            border: "1px solid var(--gold-dim)",
+                            color: "var(--gold-bright)",
+                            backdropFilter: "blur(10px)",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                            fontSize: "13px",
+                            fontWeight: 600,
+                            letterSpacing: "0.05em",
+                            boxShadow: "0 10px 30px rgba(0,0,0,0.3)",
+                        }}
+                    >
+                        <AiVideoIcon size={18} />
+                        ADJUST DIRECTOR'S CUT
+                    </motion.button>
+                    
+                    <MovieExport panels={panels} sessionId={sessionId} vibe={vibe} />
+                </div>
             )}
         </div>
     );

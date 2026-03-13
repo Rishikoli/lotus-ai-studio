@@ -8,8 +8,8 @@ load_dotenv()
 
 # ─── API Keys & Models ─────────────────────────────────────────────────────────
 INTERNAL_API_KEY  = os.getenv("INTERNAL_API_KEY", "lotus-demo-key")
-PIPELINE_MODEL    = os.getenv("PIPELINE_MODEL", "gemini-2.5-flash")
-DIRECTOR_MODEL    = os.getenv("DIRECTOR_MODEL", "gemini-2.5-flash")
+PIPELINE_MODEL    = os.getenv("PIPELINE_MODEL", "gemini-2.5-pro")
+DIRECTOR_MODEL    = os.getenv("DIRECTOR_MODEL", "gemini-2.5-pro")
 DIRECTOR_MODE     = os.getenv("DIRECTOR_MODE", "interleaved")  # "interleaved" | "sequential"
 
 # ─── Redis ────────────────────────────────────────────────────────────────────
@@ -87,7 +87,10 @@ SSE_PANEL_SCHEMA  = "panel_schema"  # Director's first event → pre-build panel
 SSE_PANEL_TEXT    = "panel_text"    # Narration text for a panel
 SSE_PANEL_IMAGE   = "panel_image"   # Image CDN URL for a panel
 SSE_PANEL_AUDIO   = "panel_audio"   # Audio data for a panel
+SSE_PANEL_VIDEO   = "panel_video"   # Video CDN URL for hero panel
 SSE_PANEL_DONE    = "panel_done"    # Panel fully complete
+SSE_AMBIENT_MUSIC = "ambient_music" # AI-generated background score
+SSE_MULTIMODAL_INTERLEAVED = "multimodal_interleaved" # Native Gemini-style parts
 SSE_DONE          = "done"          # Entire generation complete
 SSE_ERROR         = "error"         # Node failed with graceful degradation
 

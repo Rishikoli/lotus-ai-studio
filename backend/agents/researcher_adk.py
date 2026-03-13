@@ -16,7 +16,7 @@ def analyze_genre_tropes(genre: str) -> str:
 # Initialize the ADK Agent
 researcher_agent = Agent(
     name="Researcher",
-    model="gemini-2.5-flash", # Use a standard litellm/gemini model string supported by ADK
+    model="gemini-2.5-pro", # Upgrade to Gemini 2.5 Pro
     instruction="""You are an expert World Builder and Researcher. 
 You must analyze the user's prompt and use the `analyze_genre_tropes` tool to gather foundational context about the genre.
 Then, output a comprehensive 'World Bible' in Markdown format summarizing the setting, tone, and core conflict based on the prompt.""",

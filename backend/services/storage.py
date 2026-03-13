@@ -67,3 +67,43 @@ async def upload_panel_audio(session_id: str, panel_id: str, audio_bytes: bytes)
     except Exception as e:
         log.error(f"Failed to upload audio {panel_id}: {e}")
         return ""
+async def upload_ambient_music(session_id: str, audio_bytes: bytes) -> str:
+    """
+    Upload a generated ambient music track to Cloud Storage.
+    """
+    bucket = _get_bucket()
+    if bucket is None:
+        return ""
+
+    try:
+        blob_name = f"{session_id}/ambient_score.mp3"
+        blob = bucket.blob(blob_name)
+        blob.upload_from_string(audio_bytes, content_type="audio/mpeg")
+        blob.make_public()
+        url = blob.public_url
+        log.info(f"Uploaded ambient music: {url}")
+        return url
+    except Exception as e:
+        log.error(f"Failed to upload ambient music for {session_id}: {e}")
+        return ""
+
+
+async def upload_panel_video(session_id: str, panel_id: str, video_bytes: bytes) -> str:
+    """
+    Upload a generated panel hero video to Cloud Storage.
+    """
+    bucket = _get_bucket()
+    if bucket is None:
+        return ""
+
+    try:
+        blob_name = f"{session_id}/{panel_id}.mp4"
+        blob = bucket.blob(blob_name)
+        blob.upload_from_string(video_bytes, content_type="video/mp4")
+        blob.make_public()
+        url = blob.public_url
+        log.info(f"Uploaded panel video: {url}")
+        return url
+    except Exception as e:
+        log.error(f"Failed to upload video {panel_id}: {e}")
+        return ""

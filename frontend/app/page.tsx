@@ -1,37 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import TemplatePicker from "./components/TemplatePicker";
 import PipelineVisualizer from "./components/PipelineVisualizer";
 import ScriptApprovalModal from "./components/ScriptApprovalModal";
 import StoryPanel from "./components/StoryPanel";
-import BackgroundMusic from "./components/BackgroundMusic";
+import MoodCore from "./components/MoodCore";
+import EtchedHUD from "./components/EtchedHUD";
 import MetaSidebar from "./components/MetaSidebar";
 import DirectorsCutBar from "./components/DirectorsCutBar";
 import StoryDiff from "./components/StoryDiff";
 import InterrogationTerminal from "./components/InterrogationTerminal";
+import DirectorHotline from "./components/DirectorHotline";
 import { useStoryStream } from "./hooks/useStoryStream";
 import type { PipelineTemplate } from "./types";
-import { PlayIcon, StopIcon, Message01Icon, AiBrain01Icon, Alert01Icon, GitBranchIcon, UserIcon } from "hugeicons-react";
+import { PlayIcon, StopIcon, Message01Icon, AiBrain01Icon, Alert01Icon, GitBranchIcon, UserIcon, Tick01Icon } from "hugeicons-react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import StarBorder from "./components/StarBorder";
 
 export default function Home() {
-    const { state, generate, resume, createBranch, directorCut, applyNegotiation, stop } = useStoryStream();
+    const { state, generate, resume, createBranch, directorCut, applyNegotiation, stop, interrupt, setAudioVibe } = useStoryStream();
     const [prompt, setPrompt] = useState("");
     const [template, setTemplate] = useState<PipelineTemplate>("default");
     const [showPipeline, setShowPipeline] = useState(false);
     const [showLogs, setShowLogs] = useState(false);
     const [viewMode, setViewMode] = useState<"panels" | "script">("panels");
     const [interrogatingCharacter, setInterrogatingCharacter] = useState<string | null>(null);
+    const filmstripRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
+
+    // Auto-scroll to latest panel
+    useEffect(() => {
+        if (filmstripRef.current && state.panels.length > 0) {
+            const panels = filmstripRef.current.children;
+            const lastPanel = panels[panels.length - 1] as HTMLElement;
+            if (lastPanel) {
+                lastPanel.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+            }
+        }
+    }, [state.panels.length]);
 
     const handleGenerate = () => {
         if (!prompt.trim()) return;
         generate(prompt, template);
     };
+
+    useEffect(() => {
+        const handleReshoot = (e: any) => {
+            if (state.session_id) {
+                directorCut(state.session_id, "Please regenerate a high quality image for this panel. Imagen 3 failed earlier.", [e.detail.panelId]);
+            }
+        };
+        window.addEventListener("reshoot_panel", handleReshoot);
+        return () => window.removeEventListener("reshoot_panel", handleReshoot);
+    }, [state.session_id, directorCut]);
 
     const handleApplyNegotiation = async (outcome: string, influence: string) => {
         if (!state.session_id || !interrogatingCharacter) return;
@@ -241,32 +265,38 @@ export default function Home() {
                         <button
                             className="btn-ghost"
                             onClick={stop}
-                            style={{ marginLeft: "24px", color: "var(--color-error)", borderColor: "rgba(224,82,82,0.3)", height: "fit-content" }}
+                            disabled={state.phase === "complete"}
+                            style={{ 
+                                marginLeft: "24px", 
+                                color: state.phase === "complete" ? "var(--color-success)" : "var(--color-error)", 
+                                borderColor: state.phase === "complete" ? "rgba(107,203,119,0.3)" : "rgba(224,82,82,0.3)", 
+                                height: "fit-content" 
+                            }}
                         >
-                            <StopIcon size={14} />
-                            Halt Production
+                            {state.phase === "complete" ? <Tick01Icon size={14} /> : <StopIcon size={14} />}
+                            {state.phase === "complete" ? "Production Successful" : "Halt Production"}
                         </button>
                     </div>
 
                     {/* Cast Explorer: Interaction Hub */}
                     {Object.keys(state.character_profiles).length > 0 && (
-                        <div 
-                            style={{ 
-                                display: "flex", 
-                                gap: "12px", 
-                                marginBottom: "32px", 
-                                maxWidth: "1200px", 
-                                margin: "0 auto 32px auto", 
+                        <div
+                            style={{
+                                display: "flex",
+                                gap: "12px",
+                                marginBottom: "32px",
+                                maxWidth: "1200px",
+                                margin: "0 auto 32px auto",
                                 width: "100%",
                                 overflowX: "auto",
                                 padding: "8px 4px"
                             }}
                             className="animate-fade-in"
                         >
-                            <div style={{ 
-                                display: "flex", 
-                                alignItems: "center", 
-                                gap: "10px", 
+                            <div style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
                                 marginRight: "12px",
                                 borderRight: "1px solid var(--border-subtle)",
                                 paddingRight: "16px"
@@ -303,7 +333,7 @@ export default function Home() {
                     )}
 
                     {/* Main Content Area */}
-                    <div style={{ maxWidth: "1200px", margin: "0 auto", width: "100%" }}>
+                    <div style={{ maxWidth: "1400px", margin: "0 auto", width: "100%" }}>
                         {viewMode === "script" && state.branch_script_draft ? (
                             <div className="animate-fade-up">
                                 <StoryDiff
@@ -334,21 +364,39 @@ export default function Home() {
                                     )}
 
                                     {/* Panel Grid */}
+                                    {/* Panel List: Vertical Cinematic Stack */}
                                     <div
+                                        ref={filmstripRef}
                                         style={{
-                                            display: "grid",
-                                            gridTemplateColumns: "repeat(2, 1fr)",
-                                            gap: "24px",
-                                            alignItems: "start",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            alignItems: "center",
+                                            gap: "80px", // Increased gap for vertical impact
+                                            padding: "40px 0 120px 0",
+                                            scrollBehavior: "smooth",
                                         }}
+                                        className="vertical-reel"
                                     >
-                                        {state.panels.map(panel => (
-                                            <StoryPanel
-                                                key={panel.id}
-                                                panel={panel}
-                                                sessionId={state.session_id}
-                                                onBranch={(panelId, dir) => createBranch(state.session_id!, panelId, dir)}
-                                            />
+                                        {state.panels.map((panel, idx) => (
+                                            <div key={panel.id} style={{ position: "relative", width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                                {/* Vertical Connector Line */}
+                                                {idx > 0 && (
+                                                    <div style={{
+                                                        position: "absolute",
+                                                        top: "-60px",
+                                                        width: "1px",
+                                                        height: "40px",
+                                                        background: "linear-gradient(to bottom, transparent, var(--gold-primary), transparent)",
+                                                        opacity: 0.4
+                                                    }} />
+                                                )}
+                                                <StoryPanel
+                                                    panel={panel}
+                                                    audioVibe={state.audio_vibe}
+                                                    sessionId={state.session_id}
+                                                    onBranch={(panelId, dir) => createBranch(state.session_id!, panelId, dir)}
+                                                />
+                                            </div>
                                         ))}
                                     </div>
                                 </div>
@@ -356,7 +404,7 @@ export default function Home() {
                                 {/* Right: Branch Timeline (only if exists) */}
                                 {state.branch_id && state.branch_panels.length > 0 && (
                                     <div
-                                        style={{ flex: 1, display: "flex", flexDirection: "column", gap: "24px" }}
+                                        style={{ flex: 1, display: "flex", flexDirection: "column", gap: "24px", marginTop: "40px" }}
                                         className="animate-fade-in"
                                     >
                                         <div style={{ padding: "12px 16px", background: "rgba(107,203,119,0.1)", border: "1px solid rgba(107,203,119,0.3)", borderRadius: "var(--radius-md)", color: "#6BCB77", fontFamily: "var(--font-mono)", fontSize: "12px", letterSpacing: "0.1em" }}>
@@ -365,10 +413,11 @@ export default function Home() {
 
                                         <div
                                             style={{
-                                                display: "grid",
-                                                gridTemplateColumns: "repeat(2, 1fr)",
+                                                display: "flex",
                                                 gap: "24px",
-                                                alignItems: "start",
+                                                overflowX: "auto",
+                                                paddingBottom: "40px",
+                                                scrollBehavior: "smooth",
                                             }}
                                         >
                                             {state.branch_panels.map(panel => (
@@ -419,9 +468,20 @@ export default function Home() {
                     </AnimatePresence>
                 </div>
 
-                <BackgroundMusic 
-                    vibe={state.audio_vibe} 
-                    isGenerating={isGenerating} 
+                <EtchedHUD vibe={state.audio_vibe} />
+                <MoodCore
+                    vibe={state.audio_vibe}
+                    stems={state.audio_stems}
+                    leitmotifs={state.leitmotifs}
+                    currentEmotion={state.panels[state.panels.length - 1]?.emotion}
+                    isGenerating={isGenerating}
+                    onVibeChange={setAudioVibe}
+                />
+
+                <DirectorHotline
+                    sessionId={state.session_id}
+                    isGenerating={state.phase === "generating"}
+                    onInterrupt={(fb) => interrupt(state.session_id!, fb)}
                 />
                 </>
             )}

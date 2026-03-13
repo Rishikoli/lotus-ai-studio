@@ -59,6 +59,7 @@ class StudioState(TypedDict):
 
     # ─── Meta / Observability ────────────────────────────────────────────────────
     meta_commentary: Annotated[List[str], operator.add]  # 4th Wall feed (append-only reducer)
+    interventions: List[dict]            # Mid-stream user feedback: {feedback, timestamp}
 
 
 def make_initial_state(
@@ -103,4 +104,5 @@ def make_initial_state(
         "branch_direction": None,
         # Meta
         "meta_commentary": [],
+        "interventions": [],
     }

@@ -12,7 +12,7 @@ from typing import Optional
 import redis as redis_lib
 from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi.responses import StreamingResponse, JSONResponse, Response
 from pydantic import BaseModel
 
 from config import (
@@ -145,6 +145,12 @@ class ApplyNegotiationRequest(BaseModel):
     character_name: str
     outcome: str            # Summarized outcome: e.g. "Hero bribed the guard"
     influence_directive: str # How it should affect the script: e.g. "The guard now helps the hero."
+    user_id: str = "demo_user"
+
+
+class InterruptRequest(BaseModel):
+    session_id: str
+    feedback: str
     user_id: str = "demo_user"
 
 
@@ -323,6 +329,7 @@ async def apply_negotiation(body: ApplyNegotiationRequest, _auth=Depends(verify_
     Saves a negotiation outcome to the state.
     This will be injected into the Screenwriter and Script Doctor in subsequent nodes.
     """
+    log.info(f"Applying negotiation for {body.character_name} in session {body.session_id}")
     state = load_state(body.session_id)
     
     outcome_entry = {
@@ -343,6 +350,75 @@ async def apply_negotiation(body: ApplyNegotiationRequest, _auth=Depends(verify_
     
     save_state(body.session_id, state)
     return {"status": "success", "session_id": body.session_id}
+
+
+@app.post("/api/interrupt")
+async def interrupt(body: InterruptRequest, _auth=Depends(verify_api_key)):
+    """
+    Live Director Interruption — 'The Hotline'.
+    Allows a user to shout 'CUT!' or provide mid-generation feedback.
+    The next generation cycle will pick up these 'interventions'.
+    """
+    log.info(f"LIVE INTERRUPTION in session {body.session_id}: {body.feedback}")
+    state = load_state(body.session_id)
+    
+    if "interventions" not in state:
+        state["interventions"] = []
+    
+    state["interventions"].append({
+        "feedback": body.feedback,
+        "timestamp": time.time()
+    })
+    
+    save_state(body.session_id, state)
+    return {"status": "interjected", "session_id": body.session_id}
+
+
+@app.get("/api/placeholder/{panel_id}")
+async def get_placeholder(panel_id: str):
+    """
+    Fallback for missing GCS images (e.g. quota limits or upload failures).
+    Returns a cinematographic 'loading' or 'missing' SVG.
+    """
+    # Use a dark, textured SVG for better integration with the UI
+    svg_content = f"""
+    <svg width="800" height="450" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <filter id="grain">
+                <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+                <feColorMatrix type="saturate" values="0"/>
+                <feComponentTransfer>
+                    <feFuncA type="linear" slope="0.1"/>
+                </feComponentTransfer>
+            </filter>
+            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#020202;stop-opacity:1" />
+            </linearGradient>
+            <radialGradient id="ring" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" style="stop-color:#C9A84C;stop-opacity:0" />
+                <stop offset="90%" style="stop-color:#C9A84C;stop-opacity:0.2" />
+                <stop offset="100%" style="stop-color:#C9A84C;stop-opacity:0" />
+            </radialGradient>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grad)" />
+        <rect width="100%" height="100%" fill="white" filter="url(#grain)" />
+        <circle cx="50%" cy="50%" r="180" fill="url(#ring)">
+            <animate attributeName="r" values="160;180;160" dur="4s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.1;0.3;0.1" dur="4s" repeatCount="indefinite" />
+        </circle>
+        
+        <path d="M400 150 L420 225 L495 225 L435 270 L455 345 L400 300 L345 345 L365 270 L305 225 L380 225 Z" fill="#C9A84C" opacity="0.15" transform="scale(0.8) translate(100, 50)" />
+        
+        <text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle" fill="#C9A84C" font-family="Playfair Display, serif" font-style="italic" font-size="28" letter-spacing="8" opacity="0.6">
+            LOTUS
+        </text>
+        <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#555" font-family="monospace" font-size="10" letter-spacing="2">
+            [[ SYNTHESIZING PANEL {panel_id} ]]
+        </text>
+    </svg>
+    """
+    return Response(content=svg_content, media_type="image/svg+xml")
 
 
 @app.get("/api/stream/{session_id}")

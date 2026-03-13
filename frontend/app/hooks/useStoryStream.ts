@@ -32,6 +32,9 @@ export function useStoryStream() {
         branch_id: null,
         pipeline_nodes: makeInitialPipelineNodes(),
         audio_vibe: null,
+        audio_stems: null,
+        leitmotifs: {},
+        ambient_audio_url: null,
         script_draft: "",
         branch_script_draft: "",
         meta_log: [],
@@ -96,6 +99,9 @@ export function useStoryStream() {
             branch_id: null,
             pipeline_nodes: makeInitialPipelineNodes(),
             audio_vibe: null,
+            audio_stems: null,
+            leitmotifs: {},
+            ambient_audio_url: null,
             script_draft: "",
             branch_script_draft: "",
             meta_log: [],
@@ -229,12 +235,32 @@ export function useStoryStream() {
         return await res.json();
     }, [user]);
 
+    const interrupt = useCallback(async (
+        session_id: string,
+        feedback: string,
+    ) => {
+        const res = await fetch(`${API_URL}/api/interrupt`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-API-Key": API_KEY },
+            body: JSON.stringify({ 
+                session_id, 
+                feedback,
+                user_id: user?.uid || "demo_user"
+            }),
+        });
+        return await res.json();
+    }, [user]);
+
     const stop = useCallback(() => {
         abortRef.current?.abort();
         setState(prev => ({ ...prev, phase: "idle" }));
     }, []);
 
-    return { state, generate, resume, createBranch, directorCut, applyNegotiation, stop };
+    const setAudioVibe = useCallback((vibe: string) => {
+        setState(prev => ({ ...prev, audio_vibe: vibe }));
+    }, []);
+
+    return { state, generate, resume, createBranch, directorCut, applyNegotiation, interrupt, stop, setAudioVibe };
 }
 
 // ─── State Reducer ─────────────────────────────────────────────────────────
@@ -259,6 +285,15 @@ function applyChunk(prev: StudioUIState, chunk: SSEChunk, isBranch: boolean): St
             return {
                 ...prev,
                 audio_vibe: chunk.vibe,
+            };
+        }
+
+        case "ambient_music": {
+            return {
+                ...prev,
+                audio_stems: chunk.stems,
+                leitmotifs: chunk.leitmotifs || prev.leitmotifs,
+                ambient_audio_url: chunk.stems?.ambient || null,
             };
         }
 
@@ -322,6 +357,35 @@ function applyChunk(prev: StudioUIState, chunk: SSEChunk, isBranch: boolean): St
                 [target]: prev[target].map(p =>
                     p.id === chunk.panel_id ? { ...p, audio_url: chunk.audio_url } : p
                 ),
+            };
+        }
+
+        case "panel_video": {
+            const target = isBranch ? "branch_panels" : "panels";
+            return {
+                ...prev,
+                [target]: prev[target].map(p =>
+                    p.id === chunk.panel_id ? { ...p, video_url: chunk.video_url } : p
+                ),
+            };
+        }
+
+        case "multimodal_interleaved": {
+            const target = isBranch ? "branch_panels" : "panels";
+            return {
+                ...prev,
+                [target]: prev[target].map(p => {
+                    if (p.id !== chunk.panel_id) return p;
+                    let existing = { ...p };
+                    chunk.parts.forEach(part => {
+                        if (part.text) existing.narration = (existing.narration || "") + part.text;
+                        if (part.image_url) existing.image_url = part.image_url;
+                        if (part.video_url) existing.video_url = part.video_url;
+                        if (part.audio_url) existing.audio_url = part.audio_url;
+                        if (part.sfx_url) (existing as any).sfx_url = part.sfx_url;
+                    });
+                    return existing;
+                }),
             };
         }
 

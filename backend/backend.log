@@ -1,0 +1,1446 @@
+nohup: ignoring input
+INFO:     Will watch for changes in these directories: ['/home/aditya/Google/lotus-ai-studio/backend']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [2481842] using WatchFiles
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2481892]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:33836 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33852 - "GET /api/placeholder/p1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45902 - "OPTIONS /api/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45902 - "POST /api/generate HTTP/1.1" 200 OK
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/google/cloud/aiplatform/models.py:52: FutureWarning: Support for google-cloud-storage < 3.0.0 will be removed in a future version of google-cloud-aiplatform. Please upgrade to google-cloud-storage >= 3.0.0.
+  from google.cloud.aiplatform.utils import gcs_utils
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.graph:historian_node completed in 3181ms
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+WARNING:google_genai.types:Warning: there are non-text parts in the response: ['function_call'], returning concatenated text result from text parts. Check the full candidates.content.parts accessor to get the full model response.
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+INFO:lotus.graph:researcher_node completed in 18408ms
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.graph:casting_director_node completed in 7788ms
+INFO:lotus.graph:location_scout_node completed in 10149ms
+INFO:lotus.graph:sound_designer_node completed in 2417ms
+INFO:lotus.graph:screenwriter_node completed in 9393ms
+INFO:lotus.graph:script_doctor_node completed in 4054ms
+INFO:lotus.graph:Script Doctor Router: score=7, revisions_left=2
+INFO:lotus.graph:Routing back to screenwriter (revisions remaining: 2)
+INFO:lotus.graph:screenwriter_node completed in 10820ms
+INFO:lotus.graph:script_doctor_node completed in 4224ms
+INFO:lotus.graph:Script Doctor Router: score=7, revisions_left=1
+INFO:lotus.graph:Routing back to screenwriter (revisions remaining: 1)
+INFO:lotus.graph:screenwriter_node completed in 7986ms
+INFO:lotus.graph:script_doctor_node completed in 6796ms
+INFO:lotus.graph:Script Doctor Router: score=6, revisions_left=0
+INFO:lotus.graph:Routing to HITL Gate (approval or out of revisions)
+INFO:lotus.firestore:Firestore connected ✓
+INFO:lotus.firestore:Firestore Save Point 1: commit fd31e4ff-8055-47b0-a669-f5430cfae3a0 saved as draft
+INFO:     127.0.0.1:53932 - "OPTIONS /api/resume HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53932 - "POST /api/resume HTTP/1.1" 200 OK
+INFO:lotus.graph:Script Doctor Router: score=6, revisions_left=0
+INFO:lotus.graph:Routing to HITL Gate (approval or out of revisions)
+INFO:lotus.graph:Pruner: stripping world_bible and meta_commentary to reduce token load
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+WARNING:lotus.graph:Director: failed to parse panel schema — using default 3-panel layout
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:1437: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:154: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.storage:Cloud Storage connected to bucket: lotus-studio-media-489706
+INFO:lotus.storage:Uploaded panel image: https://storage.googleapis.com/lotus-studio-media-489706/fd31e4ff-8055-47b0-a669-f5430cfae3a0/p1.jpg
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:1437: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:154: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.storage:Uploaded panel image: https://storage.googleapis.com/lotus-studio-media-489706/fd31e4ff-8055-47b0-a669-f5430cfae3a0/p2.jpg
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+ERROR:lotus.graph:Image generation failed for p3: 429 Quota exceeded for aiplatform.googleapis.com/online_prediction_requests_per_base_model with base model: imagen-3.0-generate. Please submit a quota increase request. https://cloud.google.com/vertex-ai/docs/generative-ai/quotas-genai.
+INFO:lotus.firestore:Firestore Save Point 2: commit fd31e4ff-8055-47b0-a669-f5430cfae3a0 finalized
+INFO:     127.0.0.1:47400 - "GET /api/placeholder/p3 HTTP/1.1" 200 OK
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.firestore:Firestore Archivist: committed 6 entities to Lore Ledger
+INFO:lotus.graph:archivist_node completed in 5854ms
+INFO:     127.0.0.1:47734 - "GET /api/placeholder/p3 HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2481892]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2486684]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2486684]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2496725]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2496725]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2502306]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2502306]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2511095]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'services/storage.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2511095]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2512942]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'config.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2512942]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2513929]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2513929]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2514086]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:51422 - "OPTIONS /api/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51422 - "POST /api/generate HTTP/1.1" 200 OK
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/google/cloud/aiplatform/models.py:52: FutureWarning: Support for google-cloud-storage < 3.0.0 will be removed in a future version of google-cloud-aiplatform. Please upgrade to google-cloud-storage >= 3.0.0.
+  from google.cloud.aiplatform.utils import gcs_utils
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.graph:historian_node completed in 4409ms
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+WARNING:google_genai.types:Warning: there are non-text parts in the response: ['function_call'], returning concatenated text result from text parts. Check the full candidates.content.parts accessor to get the full model response.
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+INFO:lotus.graph:researcher_node completed in 20483ms
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.graph:casting_director_node completed in 8823ms
+INFO:lotus.graph:location_scout_node completed in 12378ms
+INFO:lotus.graph:Generating AI music for vibe: dark_synth
+INFO:lotus.graph:sound_designer_node completed in 12351ms
+INFO:lotus.graph:screenwriter_node completed in 13549ms
+INFO:lotus.graph:script_doctor_node completed in 6957ms
+INFO:lotus.graph:Script Doctor Router: score=7, revisions_left=2
+INFO:lotus.graph:Routing back to screenwriter (revisions remaining: 2)
+INFO:     127.0.0.1:60916 - "OPTIONS /api/interrogate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60916 - "POST /api/interrogate HTTP/1.1" 404 Not Found
+INFO:lotus.graph:screenwriter_node completed in 11240ms
+INFO:lotus.graph:script_doctor_node completed in 3898ms
+INFO:lotus.graph:Script Doctor Router: score=7, revisions_left=1
+INFO:lotus.graph:Routing back to screenwriter (revisions remaining: 1)
+INFO:lotus.graph:screenwriter_node completed in 12744ms
+INFO:lotus.graph:script_doctor_node completed in 5092ms
+INFO:lotus.graph:Script Doctor Router: score=7, revisions_left=0
+INFO:lotus.graph:Routing to HITL Gate (approval or out of revisions)
+INFO:lotus.firestore:Firestore connected ✓
+INFO:lotus.firestore:Firestore Save Point 1: commit 83f57442-f3de-4ca6-9319-4fc89b225141 saved as draft
+INFO:     127.0.0.1:41754 - "OPTIONS /api/resume HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41754 - "POST /api/resume HTTP/1.1" 200 OK
+INFO:lotus.graph:Script Doctor Router: score=7, revisions_left=0
+INFO:lotus.graph:Routing to HITL Gate (approval or out of revisions)
+INFO:lotus.graph:Pruner: stripping world_bible and meta_commentary to reduce token load
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+WARNING:lotus.graph:Director: failed to parse panel schema — using default 3-panel layout
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:1437: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:154: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.storage:Cloud Storage connected to bucket: lotus-studio-media-489706
+INFO:lotus.storage:Uploaded panel image: https://storage.googleapis.com/lotus-studio-media-489706/83f57442-f3de-4ca6-9319-4fc89b225141/p1.jpg
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:1437: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:154: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.storage:Uploaded panel image: https://storage.googleapis.com/lotus-studio-media-489706/83f57442-f3de-4ca6-9319-4fc89b225141/p2.jpg
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+ERROR:lotus.graph:Image generation failed for p3: 429 Quota exceeded for aiplatform.googleapis.com/online_prediction_requests_per_base_model with base model: imagen-3.0-generate. Please submit a quota increase request. https://cloud.google.com/vertex-ai/docs/generative-ai/quotas-genai.
+INFO:lotus.firestore:Firestore Save Point 2: commit 83f57442-f3de-4ca6-9319-4fc89b225141 finalized
+INFO:     127.0.0.1:34572 - "GET /api/placeholder/p3 HTTP/1.1" 200 OK
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.firestore:Firestore Archivist: committed 2 entities to Lore Ledger
+INFO:lotus.graph:archivist_node completed in 3442ms
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2514086]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2599533]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'config.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2599533]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2617233]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'services/storage.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2617233]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2617265]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2617265]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2617575]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2617575]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2617658]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'state.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2617658]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2617686]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2617686]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2617848]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2617848]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2619253]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2619253]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2619285]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2619285]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2700218]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2700218]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2700279]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:35400 - "OPTIONS /api/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35400 - "POST /api/generate HTTP/1.1" 200 OK
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/google/cloud/aiplatform/models.py:52: FutureWarning: Support for google-cloud-storage < 3.0.0 will be removed in a future version of google-cloud-aiplatform. Please upgrade to google-cloud-storage >= 3.0.0.
+  from google.cloud.aiplatform.utils import gcs_utils
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.0-flash` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:historian_node failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.0-flash` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+WARNING:google_genai.types:Warning: there are non-text parts in the response: ['function_call'], returning concatenated text result from text parts. Check the full candidates.content.parts accessor to get the full model response.
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+INFO:lotus.graph:researcher_node completed in 17815ms
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.0-flash` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:casting_director_node generator failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.0-flash` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.0-flash` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:location_scout_node failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.0-flash` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.0-flash` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:sound_designer_node generator failed: Invalid format specifier ' "<prompt for the background pad>",
+     "rhythm": "<prompt for the rhythmic pulse>",
+     "melody": "<prompt for the melodic layer>"
+  ' for object of type 'str'
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.0-flash` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:screenwriter_node failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.0-flash` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.0-flash` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:script_doctor_node failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.0-flash` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+INFO:lotus.graph:Script Doctor Router: score=0, revisions_left=3
+WARNING:lotus.graph:Script Doctor produced a 0 score (parsing error or node failure). Breaking loop.
+INFO:lotus.firestore:Firestore connected ✓
+INFO:lotus.firestore:Firestore Save Point 1: commit 6e2ff18e-f76f-482a-8dd7-48739baf9e86 saved as draft
+INFO:     127.0.0.1:59996 - "OPTIONS /api/resume HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59996 - "POST /api/resume HTTP/1.1" 200 OK
+INFO:lotus.graph:Script Doctor Router: score=0, revisions_left=3
+WARNING:lotus.graph:Script Doctor produced a 0 score (parsing error or node failure). Breaking loop.
+INFO:lotus.graph:Pruner: stripping world_bible and meta_commentary to reduce token load
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.0-flash` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus:Resume error: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.0-flash` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+WARNING:  WatchFiles detected changes in 'config.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2700279]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2704472]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agents/researcher_adk.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2704472]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2704554]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:58544 - "POST /api/generate HTTP/1.1" 200 OK
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/google/cloud/aiplatform/models.py:52: FutureWarning: Support for google-cloud-storage < 3.0.0 will be removed in a future version of google-cloud-aiplatform. Please upgrade to google-cloud-storage >= 3.0.0.
+  from google.cloud.aiplatform.utils import gcs_utils
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:historian_node failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002:generateContent "HTTP/1.1 404 Not Found"
+ERROR:lotus.graph:researcher_node failed: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions', 'status': 'NOT_FOUND'}}
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:location_scout_node failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:casting_director_node generator failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:sound_designer_node generator failed: Invalid format specifier ' "<prompt for the background pad>",
+     "rhythm": "<prompt for the rhythmic pulse>",
+     "melody": "<prompt for the melodic layer>"
+  ' for object of type 'str'
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:screenwriter_node failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:script_doctor_node failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+INFO:lotus.graph:Script Doctor Router: score=0, revisions_left=3
+WARNING:lotus.graph:Script Doctor produced a 0 score (parsing error or node failure). Breaking loop.
+INFO:lotus.firestore:Firestore connected ✓
+INFO:lotus.firestore:Firestore Save Point 1: commit fb4a21d4-7052-4839-90a3-77d3234bda1a saved as draft
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2704554]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2707101]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2707101]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2707344]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2707344]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2707548]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:33386 - "OPTIONS /api/resume HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33386 - "POST /api/resume HTTP/1.1" 200 OK
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/google/cloud/aiplatform/models.py:52: FutureWarning: Support for google-cloud-storage < 3.0.0 will be removed in a future version of google-cloud-aiplatform. Please upgrade to google-cloud-storage >= 3.0.0.
+  from google.cloud.aiplatform.utils import gcs_utils
+ERROR:lotus.graph:historian_node failed: 'user_prompt'
+ERROR:lotus.graph:researcher_node failed: 'pipeline_template'
+ERROR:lotus.graph:location_scout_node failed: 'pipeline_template'
+ERROR:lotus.graph:casting_director_node generator failed: 'pipeline_template'
+ERROR:lotus.graph:sound_designer_node generator failed: 'pipeline_template'
+ERROR:lotus.graph:screenwriter_node failed: 'pipeline_template'
+ERROR:lotus.graph:script_doctor_node failed: 'pipeline_template'
+INFO:lotus.graph:Script Doctor Router: score=0, revisions_left=0
+WARNING:lotus.graph:Script Doctor produced a 0 score (parsing error or node failure). Breaking loop.
+INFO:lotus.graph:Pruner: stripping world_bible and meta_commentary to reduce token load
+ERROR:lotus:Resume error: 'scene_physics'
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2707548]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2709361]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:37550 - "OPTIONS /api/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37550 - "POST /api/generate HTTP/1.1" 200 OK
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/google/cloud/aiplatform/models.py:52: FutureWarning: Support for google-cloud-storage < 3.0.0 will be removed in a future version of google-cloud-aiplatform. Please upgrade to google-cloud-storage >= 3.0.0.
+  from google.cloud.aiplatform.utils import gcs_utils
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:historian_node failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002:generateContent "HTTP/1.1 404 Not Found"
+ERROR:lotus.graph:researcher_node failed: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions', 'status': 'NOT_FOUND'}}
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:location_scout_node failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:casting_director_node generator failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:sound_designer_node generator failed: Invalid format specifier ' "<prompt for the background pad>",
+     "rhythm": "<prompt for the rhythmic pulse>",
+     "melody": "<prompt for the melodic layer>"
+  ' for object of type 'str'
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:screenwriter_node failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:script_doctor_node failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+INFO:lotus.graph:Script Doctor Router: score=0, revisions_left=3
+WARNING:lotus.graph:Script Doctor produced a 0 score (parsing error or node failure). Breaking loop.
+INFO:lotus.graph:Pruner: stripping world_bible and meta_commentary to reduce token load
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus:Pipeline error: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+INFO:     127.0.0.1:48214 - "POST /api/generate HTTP/1.1" 200 OK
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:historian_node failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002:generateContent "HTTP/1.1 404 Not Found"
+ERROR:lotus.graph:researcher_node failed: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions', 'status': 'NOT_FOUND'}}
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:location_scout_node failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:casting_director_node generator failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:sound_designer_node generator failed: Invalid format specifier ' "<prompt for the background pad>",
+     "rhythm": "<prompt for the rhythmic pulse>",
+     "melody": "<prompt for the melodic layer>"
+  ' for object of type 'str'
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:screenwriter_node failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus.graph:script_doctor_node failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+INFO:lotus.graph:Script Doctor Router: score=0, revisions_left=3
+WARNING:lotus.graph:Script Doctor produced a 0 score (parsing error or node failure). Breaking loop.
+INFO:lotus.graph:Pruner: stripping world_bible and meta_commentary to reduce token load
+ERROR:lotus.graph:Gemini call failed: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+ERROR:lotus:Pipeline error: 404 Publisher Model `projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+WARNING:  WatchFiles detected changes in 'agents/researcher_adk.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2709361]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2711122]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'config.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2711122]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2711182]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2711182]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2711791]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agents/researcher_adk.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2711791]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2711806]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'config.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2711806]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2711868]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:59102 - "POST /api/generate HTTP/1.1" 200 OK
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/google/cloud/aiplatform/models.py:52: FutureWarning: Support for google-cloud-storage < 3.0.0 will be removed in a future version of google-cloud-aiplatform. Please upgrade to google-cloud-storage >= 3.0.0.
+  from google.cloud.aiplatform.utils import gcs_utils
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.graph:historian_node completed in 9460ms
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.5-pro:generateContent "HTTP/1.1 200 OK"
+WARNING:google_genai.types:Warning: there are non-text parts in the response: ['function_call'], returning concatenated text result from text parts. Check the full candidates.content.parts accessor to get the full model response.
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.5-pro:generateContent "HTTP/1.1 200 OK"
+INFO:lotus.graph:researcher_node completed in 34086ms
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.graph:location_scout_node completed in 37485ms
+INFO:lotus.graph:casting_director_node completed in 42035ms
+ERROR:lotus.graph:sound_designer_node generator failed: Invalid format specifier ' "<prompt for the background pad>",
+     "rhythm": "<prompt for the rhythmic pulse>",
+     "melody": "<prompt for the melodic layer>"
+  ' for object of type 'str'
+INFO:lotus.graph:screenwriter_node completed in 46503ms
+INFO:lotus.graph:script_doctor_node completed in 25633ms
+INFO:lotus.graph:Script Doctor Router: score=9, revisions_left=2
+INFO:lotus.graph:Pruner: stripping world_bible and meta_commentary to reduce token load
+WARNING:lotus.graph:Director: failed to parse panel schema — using default 3-panel layout
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:1437: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:154: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.storage:Cloud Storage connected to bucket: lotus-studio-media-489706
+INFO:lotus.storage:Uploaded panel image: https://storage.googleapis.com/lotus-studio-media-489706/7d3b8662-8804-44ba-992d-0fd36af23f04/p1.jpg
+INFO:lotus.graph:Video Director: Rendering hero sequence for p1
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:1437: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:154: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.storage:Uploaded panel image: https://storage.googleapis.com/lotus-studio-media-489706/7d3b8662-8804-44ba-992d-0fd36af23f04/p2.jpg
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:1437: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:154: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.storage:Uploaded panel image: https://storage.googleapis.com/lotus-studio-media-489706/7d3b8662-8804-44ba-992d-0fd36af23f04/p3.jpg
+INFO:lotus.firestore:Firestore connected ✓
+ERROR:lotus.firestore:Firestore finalize_story_commit failed: 404 No document to update: projects/phrasal-bivouac-489706-r8/databases/(default)/documents/commits/7d3b8662-8804-44ba-992d-0fd36af23f04
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.firestore:Firestore Archivist: committed 6 entities to Lore Ledger
+INFO:lotus.graph:archivist_node completed in 17634ms
+INFO:lotus.firestore:Firestore Save Point 1: commit 7d3b8662-8804-44ba-992d-0fd36af23f04 saved as draft
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2711868]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2717221]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2717221]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2719497]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2719497]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2719846]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2719846]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2723002]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2723002]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2723173]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:33202 - "OPTIONS /api/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33202 - "POST /api/generate HTTP/1.1" 200 OK
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/google/cloud/aiplatform/models.py:52: FutureWarning: Support for google-cloud-storage < 3.0.0 will be removed in a future version of google-cloud-aiplatform. Please upgrade to google-cloud-storage >= 3.0.0.
+  from google.cloud.aiplatform.utils import gcs_utils
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.graph:historian_node completed in 10169ms
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.5-pro:generateContent "HTTP/1.1 200 OK"
+WARNING:google_genai.types:Warning: there are non-text parts in the response: ['function_call'], returning concatenated text result from text parts. Check the full candidates.content.parts accessor to get the full model response.
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.5-pro:generateContent "HTTP/1.1 200 OK"
+INFO:lotus.graph:researcher_node completed in 27537ms
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.graph:casting_director_node completed in 38502ms
+INFO:lotus.graph:location_scout_node completed in 39316ms
+ERROR:lotus.graph:sound_designer_node generator failed: Invalid format specifier ' "<prompt for the background pad>",
+     "rhythm": "<prompt for the rhythmic pulse>",
+     "melody": "<prompt for the melodic layer>"
+  ' for object of type 'str'
+INFO:lotus.graph:screenwriter_node completed in 45768ms
+INFO:lotus.graph:script_doctor_node completed in 26680ms
+INFO:lotus.graph:Script Doctor Router: score=8, revisions_left=2
+INFO:lotus.firestore:Firestore connected ✓
+INFO:lotus.firestore:Firestore Save Point 1: commit c08b061b-ddbb-4fa3-8868-fc415c05c890 saved as draft
+INFO:     127.0.0.1:37462 - "OPTIONS /api/resume HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37462 - "POST /api/resume HTTP/1.1" 200 OK
+INFO:lotus.graph:Script Doctor Router: score=8, revisions_left=2
+INFO:lotus.graph:HITL Gate: Pausing for manual script approval.
+INFO:lotus.graph:hitl_gate_node completed in 0ms
+INFO:lotus.graph:Pruner: stripping world_bible and meta_commentary to reduce token load
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+WARNING:lotus.graph:Director: failed to parse panel schema — using default 3-panel layout
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:1437: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:154: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.storage:Cloud Storage connected to bucket: lotus-studio-media-489706
+INFO:lotus.storage:Uploaded panel image: https://storage.googleapis.com/lotus-studio-media-489706/c08b061b-ddbb-4fa3-8868-fc415c05c890/p1.jpg
+INFO:lotus.graph:Video Director: Rendering hero sequence for p1
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:1437: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:154: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.storage:Uploaded panel image: https://storage.googleapis.com/lotus-studio-media-489706/c08b061b-ddbb-4fa3-8868-fc415c05c890/p2.jpg
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:1437: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:154: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.storage:Uploaded panel image: https://storage.googleapis.com/lotus-studio-media-489706/c08b061b-ddbb-4fa3-8868-fc415c05c890/p3.jpg
+INFO:lotus.firestore:Firestore Save Point 2: commit c08b061b-ddbb-4fa3-8868-fc415c05c890 finalized
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.firestore:Firestore Archivist: committed 6 entities to Lore Ledger
+INFO:lotus.graph:archivist_node completed in 21127ms
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2723173]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2727359]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2727359]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2727395]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2727395]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2727611]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:41582 - "OPTIONS /api/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41582 - "POST /api/generate HTTP/1.1" 200 OK
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/google/cloud/aiplatform/models.py:52: FutureWarning: Support for google-cloud-storage < 3.0.0 will be removed in a future version of google-cloud-aiplatform. Please upgrade to google-cloud-storage >= 3.0.0.
+  from google.cloud.aiplatform.utils import gcs_utils
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.graph:historian_node completed in 10511ms
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.5-pro:generateContent "HTTP/1.1 200 OK"
+WARNING:google_genai.types:Warning: there are non-text parts in the response: ['function_call'], returning concatenated text result from text parts. Check the full candidates.content.parts accessor to get the full model response.
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.5-pro:generateContent "HTTP/1.1 200 OK"
+INFO:lotus.graph:researcher_node completed in 39974ms
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.graph:location_scout_node completed in 40246ms
+INFO:lotus.graph:casting_director_node completed in 41793ms
+ERROR:lotus.graph:sound_designer_node generator failed: Invalid format specifier ' "<prompt for the background pad>",
+     "rhythm": "<prompt for the rhythmic pulse>",
+     "melody": "<prompt for the melodic layer>"
+  ' for object of type 'str'
+INFO:lotus.graph:screenwriter_node completed in 30611ms
+INFO:lotus.graph:script_doctor_node completed in 24166ms
+INFO:lotus.graph:Script Doctor Router: score=8, revisions_left=2
+INFO:lotus.firestore:Firestore connected ✓
+INFO:lotus.firestore:Firestore Save Point 1: commit c9a4d2be-2612-43e6-bbfd-97a6b4c7d0d0 saved as draft
+INFO:     127.0.0.1:35708 - "OPTIONS /api/resume HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35708 - "POST /api/resume HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60154 - "OPTIONS /api/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60154 - "POST /api/generate HTTP/1.1" 200 OK
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.graph:historian_node completed in 12735ms
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.5-pro:generateContent "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.5-pro:generateContent "HTTP/1.1 200 OK"
+INFO:lotus.graph:researcher_node completed in 41286ms
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.graph:casting_director_node completed in 37240ms
+INFO:lotus.graph:location_scout_node completed in 39414ms
+ERROR:lotus.graph:sound_designer_node generator failed: Invalid format specifier ' "<prompt for the background pad>",
+     "rhythm": "<prompt for the rhythmic pulse>",
+     "melody": "<prompt for the melodic layer>"
+  ' for object of type 'str'
+INFO:lotus.graph:screenwriter_node completed in 29648ms
+INFO:lotus.graph:script_doctor_node completed in 33238ms
+INFO:lotus.graph:Script Doctor Router: score=9, revisions_left=2
+INFO:lotus.firestore:Firestore Save Point 1: commit 6e54ce21-4262-462b-8214-2419138ba604 saved as draft
+INFO:     127.0.0.1:55112 - "OPTIONS /api/resume HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55112 - "POST /api/resume HTTP/1.1" 200 OK
+INFO:lotus.graph:Script Doctor Router: score=9, revisions_left=2
+INFO:lotus.graph:HITL Gate: Pausing for manual script approval.
+INFO:lotus.graph:hitl_gate_node completed in 0ms
+INFO:lotus.graph:Pruner: stripping world_bible and meta_commentary to reduce token load
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+WARNING:lotus.graph:Director: failed to parse panel schema — using default 3-panel layout
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:1437: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:154: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.storage:Cloud Storage connected to bucket: lotus-studio-media-489706
+INFO:lotus.storage:Uploaded panel image: https://storage.googleapis.com/lotus-studio-media-489706/6e54ce21-4262-462b-8214-2419138ba604/p1.jpg
+INFO:lotus.graph:Video Director: Rendering hero sequence for p1
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:1437: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:154: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.storage:Uploaded panel image: https://storage.googleapis.com/lotus-studio-media-489706/6e54ce21-4262-462b-8214-2419138ba604/p2.jpg
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2727611]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2857178]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2857178]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2857287]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2857287]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2857407]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:60226 - "OPTIONS /api/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60226 - "POST /api/generate HTTP/1.1" 200 OK
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/google/cloud/aiplatform/models.py:52: FutureWarning: Support for google-cloud-storage < 3.0.0 will be removed in a future version of google-cloud-aiplatform. Please upgrade to google-cloud-storage >= 3.0.0.
+  from google.cloud.aiplatform.utils import gcs_utils
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.graph:historian_node completed in 10879ms
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.5-pro:generateContent "HTTP/1.1 200 OK"
+WARNING:google_genai.types:Warning: there are non-text parts in the response: ['function_call'], returning concatenated text result from text parts. Check the full candidates.content.parts accessor to get the full model response.
+INFO:httpx:HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1beta1/projects/phrasal-bivouac-489706-r8/locations/us-central1/publishers/google/models/gemini-2.5-pro:generateContent "HTTP/1.1 200 OK"
+INFO:lotus.graph:researcher_node completed in 33452ms
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.graph:casting_director_node completed in 31102ms
+INFO:lotus.graph:location_scout_node completed in 39408ms
+ERROR:lotus.graph:sound_designer_node generator failed: Invalid format specifier ' "<prompt for the background pad>",
+     "rhythm": "<prompt for the rhythmic pulse>",
+     "melody": "<prompt for the melodic layer>"
+  ' for object of type 'str'
+INFO:lotus.graph:screenwriter_node completed in 25381ms
+INFO:lotus.graph:script_doctor_node completed in 29872ms
+INFO:lotus.graph:Script Doctor Router: score=9, revisions_left=2
+INFO:lotus.firestore:Firestore connected ✓
+INFO:lotus.firestore:Firestore Save Point 1: commit fcfb1aea-bd7d-4937-ac35-c55a65a81d1b saved as draft
+INFO:     127.0.0.1:51910 - "OPTIONS /api/resume HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51910 - "POST /api/resume HTTP/1.1" 200 OK
+INFO:lotus.graph:Script Doctor Router: score=9, revisions_left=2
+INFO:lotus.graph:HITL Gate: Pausing for manual script approval.
+INFO:lotus.graph:hitl_gate_node completed in 0ms
+INFO:lotus.graph:Pruner: stripping world_bible and meta_commentary to reduce token load
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+WARNING:lotus.graph:Director: failed to parse panel schema — using default 4-panel layout
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:1437: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:154: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.storage:Cloud Storage connected to bucket: lotus-studio-media-489706
+INFO:lotus.storage:Uploaded panel image: https://storage.googleapis.com/lotus-studio-media-489706/fcfb1aea-bd7d-4937-ac35-c55a65a81d1b/p1.jpg
+INFO:lotus.graph:Video Director: Rendering hero sequence for p1
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:1437: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:154: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.storage:Uploaded panel image: https://storage.googleapis.com/lotus-studio-media-489706/fcfb1aea-bd7d-4937-ac35-c55a65a81d1b/p2.jpg
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:1437: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:154: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.storage:Uploaded panel image: https://storage.googleapis.com/lotus-studio-media-489706/fcfb1aea-bd7d-4937-ac35-c55a65a81d1b/p3.jpg
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/_model_garden/_model_garden_models.py:278: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+ERROR:lotus.graph:TTS Failed: 403 Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "SERVICE_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "texttospeech.googleapis.com"
+}
+metadata {
+  key: "serviceTitle"
+  value: "Cloud Text-to-Speech API"
+}
+metadata {
+  key: "containerInfo"
+  value: "phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "consumer"
+  value: "projects/phrasal-bivouac-489706-r8"
+}
+metadata {
+  key: "activationUrl"
+  value: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+, locale: "en-US"
+message: "Cloud Text-to-Speech API has not been used in project phrasal-bivouac-489706-r8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console API activation"
+  url: "https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=phrasal-bivouac-489706-r8"
+}
+]
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:1437: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/vision_models/_vision_models.py:154: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.storage:Uploaded panel image: https://storage.googleapis.com/lotus-studio-media-489706/fcfb1aea-bd7d-4937-ac35-c55a65a81d1b/p4.jpg
+INFO:lotus.firestore:Firestore Save Point 2: commit fcfb1aea-bd7d-4937-ac35-c55a65a81d1b finalized
+/home/aditya/Google/lotus-ai-studio/backend/venv/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
+  warning_logs.show_deprecation_warning()
+INFO:lotus.firestore:Firestore Archivist: committed 5 entities to Lore Ledger
+INFO:lotus.graph:archivist_node completed in 28958ms
+WARNING:  WatchFiles detected changes in 'graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2857407]
+INFO:lotus:Redis connected ✓
+INFO:     Started server process [2863454]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.

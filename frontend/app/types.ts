@@ -11,7 +11,10 @@ export type SSEChunkType =
     | "panel_text"
     | "panel_image"
     | "panel_audio"
+    | "panel_video"
     | "panel_done"
+    | "ambient_music"
+    | "multimodal_interleaved"
     | "character_profiles"
     | "done"
     | "error";
@@ -75,6 +78,25 @@ export interface PanelAudioChunk {
     branch_id?: string;
 }
 
+export interface PanelVideoChunk {
+    type: "panel_video";
+    panel_id: string;
+    video_url: string;
+    branch_id?: string;
+}
+
+export interface MultimodalInterleavedChunk {
+    type: "multimodal_interleaved";
+    panel_id: string;
+    parts: {
+        text?: string;
+        image_url?: string;
+        video_url?: string;
+        audio_url?: string;
+        sfx_url?: string;
+    }[];
+}
+
 
 export interface PanelDoneChunk {
     type: "panel_done";
@@ -99,6 +121,12 @@ export interface ErrorChunk {
     content: string;
 }
 
+export interface AmbientMusicChunk {
+    type: "ambient_music";
+    stems: Record<string, string>; // { "ambient": url, "rhythm": url, "melody": url }
+    leitmotifs?: Record<string, string>; // { "character_name": url }
+}
+
 export type SSEChunk =
     | MetaChunk
     | AudioVibeChunk
@@ -108,7 +136,10 @@ export type SSEChunk =
     | PanelTextChunk
     | PanelImageChunk
     | PanelAudioChunk
+    | PanelVideoChunk
     | PanelDoneChunk
+    | AmbientMusicChunk
+    | MultimodalInterleavedChunk
     | CharacterProfilesChunk
     | DoneChunk
     | ErrorChunk;
@@ -139,6 +170,7 @@ export interface PanelObject {
 export interface StoryPanel extends PanelObject {
     narration?: string;      // streaming text
     image_url?: string;      // CDN URL from Cloud Storage
+    video_url?: string;      // Hero Video URL
     audio_url?: string;
     is_loading: boolean;
     is_complete: boolean;
@@ -208,6 +240,9 @@ export interface StudioUIState {
     branch_id: string | null;
     pipeline_nodes: PipelineNode[];
     audio_vibe: string | null;
+    audio_stems: Record<string, string> | null;
+    leitmotifs: Record<string, string>;
+    ambient_audio_url: string | null;
     script_draft: string;
     branch_script_draft: string;    // alternate version for diffing
     meta_log: MetaChunk[];

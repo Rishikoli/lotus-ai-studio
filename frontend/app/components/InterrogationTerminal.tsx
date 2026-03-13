@@ -94,25 +94,38 @@ export default function InterrogationTerminal({
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="glass-panel"
-            style={{
-                position: "fixed",
-                top: "10%",
-                left: "15%",
-                right: "15%",
-                bottom: "10%",
-                zIndex: 1000,
-                display: "flex",
-                flexDirection: "column",
-                border: "1px solid var(--gold-dim)",
-                boxShadow: "0 0 100px rgba(0,0,0,0.8), inset 0 0 20px rgba(201,168,76,0.1)",
-                overflow: "hidden",
-            }}
-        >
+        <>
+            {/* Backdrop */}
+            <div 
+                style={{
+                    position: "fixed",
+                    inset: 0,
+                    background: "rgba(0,0,0,0.8)",
+                    backdropFilter: "blur(8px)",
+                    zIndex: 998,
+                }}
+                onClick={onClose}
+            />
+            
+            <motion.div
+                initial={{ opacity: 0, scale: 0.9, x: "-50%", y: "calc(-50% + 20px)" }}
+                animate={{ opacity: 1, scale: 1, x: "-50%", y: "-50%" }}
+                exit={{ opacity: 0, scale: 0.9, x: "-50%", y: "calc(-50% + 20px)" }}
+                className="glass-panel"
+                style={{
+                    position: "fixed",
+                    top: "50%",
+                    left: "50%",
+                    width: "80vw",
+                    height: "80vh",
+                    zIndex: 1000,
+                    display: "flex",
+                    flexDirection: "column",
+                    border: "1px solid var(--gold-dim)",
+                    boxShadow: "0 0 100px rgba(0,0,0,0.8), inset 0 0 20px rgba(201,168,76,0.1)",
+                    overflow: "hidden",
+                }}
+            >
             {/* Terminal Header */}
             <div style={{
                 padding: "16px 24px",
@@ -347,5 +360,6 @@ export default function InterrogationTerminal({
                 </div>
             </div>
         </motion.div>
+        </>
     );
 }

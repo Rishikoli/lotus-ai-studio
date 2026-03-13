@@ -12,10 +12,12 @@ import {
     VolumeOffIcon
 } from "hugeicons-react";
 import SceneCanvas from "./SceneCanvas";
+import { motion } from "motion/react";
 
 interface StoryPanelProps {
     panel: StoryPanelType;
     sessionId: string | null;
+    audioVibe?: string | null;
     onBranch?: (panelId: string, direction: string) => void;
     isBranch?: boolean;
 }
@@ -27,69 +29,157 @@ const BRANCH_DIRECTIONS = [
     { key: "chaotic", label: "Go Chaotic", icon: FlashIcon, color: "#E05252" },
 ];
 
-const EMOTION_OVERLAYS: Record<string, string> = {
-    tense: "radial-gradient(ellipse at center, transparent 60%, rgba(100,60,0,0.4))",
-    dread: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,30,0.6))",
-    peak_fear: "radial-gradient(ellipse at center, rgba(224,82,82,0.15), rgba(0,0,0,0.5))",
-    revelation: "radial-gradient(ellipse at top, rgba(201,168,76,0.3), transparent 70%)",
-    hopeful: "radial-gradient(ellipse at top, rgba(212,168,67,0.2), transparent 80%)",
-    resolved: "none",
-    calm: "none",
-    comedic: "none",
+const EMOTION_THEMES: Record<string, { r: number, g: number, b: number, letterbox: string }> = {
+    calm: { r: 100, g: 150, b: 255, letterbox: "5%" },
+    curious: { r: 201, g: 168, b: 76, letterbox: "8%" },
+    tense: { r: 255, g: 100, b: 100, letterbox: "15%" },
+    dread: { r: 50, g: 0, b: 100, letterbox: "20%" },
+    peak_fear: { r: 255, g: 255, b: 255, letterbox: "25%" },
+    revelation: { r: 255, g: 215, b: 0, letterbox: "10%" },
+    hopeful: { r: 100, g: 255, b: 150, letterbox: "5%" },
+    resolved: { r: 200, g: 200, b: 200, letterbox: "5%" },
+    comedic: { r: 255, g: 200, b: 50, letterbox: "0%" },
+    none: { r: 255, g: 255, b: 255, letterbox: "5%" }
 };
 
-export default function StoryPanel({ panel, sessionId, onBranch, isBranch }: StoryPanelProps) {
-    const [showBranchMenu, setShowBranchMenu] = useState(false);
+export default function StoryPanel({ panel, sessionId, audioVibe, onBranch, isBranch }: StoryPanelProps) {
     const [isMuted, setIsMuted] = useState(false);
-    const hasSpoken = useRef(false);
+    const [showBranchMenu, setShowBranchMenu] = useState(false);
+    const hasStartedNarration = useRef(false);
+    const [isHovered, setIsHovered] = useState(false);
+    const [isSpeaking, setIsSpeaking] = useState(false);
+    const audioInstanceRef = useRef<HTMLAudioElement | null>(null);
+    
+    // Check if the image reflects a quota failure
+    const isImageFailed = panel.image_url?.includes("placeholder");
 
+    const theme = EMOTION_THEMES[panel.emotion] || EMOTION_THEMES.none;
     const layoutClass = `panel-${panel.layout.replace(/_/g, "-")}`;
-    const emotionOverlay = EMOTION_OVERLAYS[panel.emotion] ?? "none";
 
-    // Automatic Narration (Web Speech API)
+    // Centralized Audio Manager (simplistic for now)
+    const stopAllSpeech = () => {
+        window.speechSynthesis.cancel();
+        if (audioInstanceRef.current) {
+            audioInstanceRef.current.pause();
+            audioInstanceRef.current = null;
+        }
+        setIsSpeaking(false);
+    };
+
+    // Audio Punter Logic (Narration & SFX)
     useEffect(() => {
-        if (!panel.narration || panel.is_loading || isMuted || hasSpoken.current) return;
+        if (isMuted) return;
 
-        // Give the UI a moment to settle
-        const timeout = setTimeout(() => {
-            const utterance = new SpeechSynthesisUtterance(panel.narration!);
-            
-            // Premium Voice Selection (attempt to find a cinematic voice)
-            const voices = window.speechSynthesis.getVoices();
-            const preferredVoice = voices.find(v => 
-                v.name.includes("Google") || v.name.includes("Premium") || v.name.includes("Natural")
-            );
-            
-            if (preferredVoice) utterance.voice = preferredVoice;
-            utterance.pitch = 0.9; // Slightly deeper for cinematic feel
-            utterance.rate = 0.95; // Slightly slower for dramatic effect
-            
-            window.speechSynthesis.speak(utterance);
-            hasSpoken.current = true;
-        }, 800);
+        // X-Position logic based on layout (-1 to 1)
+        const getXPos = (layout: string) => {
+            if (layout.includes("left")) return -1;
+            if (layout.includes("right")) return 1;
+            if (layout.includes("2col")) return panel.id.includes("2") ? 0.5 : -0.5;
+            return 0; // centered
+        };
 
-        return () => clearTimeout(timeout);
-    }, [panel.narration, panel.is_loading, isMuted]);
+        const xPos = getXPos(panel.layout);
+
+        // 1. Narration Audio (Spatialized)
+        if (panel.audio_url && !hasStartedNarration.current) {
+            window.dispatchEvent(new CustomEvent("play_spatial_sfx", { 
+                detail: { url: panel.audio_url, xPos: xPos * 0.3 } // narration panned less aggressively
+            }));
+            
+            setIsSpeaking(true);
+            hasStartedNarration.current = true;
+            
+            const charName = panel.narration?.split(":")[0] || "Unknown";
+            window.dispatchEvent(new CustomEvent("play_leitmotif", { detail: { characterName: charName.trim() } }));
+            
+            // Note: we can't easily track .onended for the dispatched spatial audio here without a ref, 
+            // but for a demo, a timeout based on narration length is a good fallback.
+            const voiceTimeout = setTimeout(() => setIsSpeaking(false), 5000 + (panel.narration?.length || 0) * 50);
+            return () => clearTimeout(voiceTimeout);
+        }
+
+        // 2. Specialized SFX (Highly Spatialized)
+        if ((panel as any).sfx_url && !hasStartedNarration.current) {
+           window.dispatchEvent(new CustomEvent("play_spatial_sfx", { 
+               detail: { url: (panel as any).sfx_url, xPos } 
+           }));
+        }
+
+        // 3. Fallback to Web Speech API if narration text exists but no audio_url yet
+        if (panel.narration && !hasStartedNarration.current && !panel.audio_url && !panel.is_loading) {
+            stopAllSpeech();
+            const timeout = setTimeout(() => {
+                const utterance = new SpeechSynthesisUtterance(panel.narration!);
+                const voices = window.speechSynthesis.getVoices();
+                const preferredVoice = voices.find(v => 
+                    v.name.includes("Google") || v.name.includes("Premium") || v.name.includes("Natural")
+                );
+                
+                if (preferredVoice) utterance.voice = preferredVoice;
+                utterance.pitch = 0.9;
+                utterance.rate = 0.95;
+                
+                utterance.onstart = () => {
+                    setIsSpeaking(true);
+                    const charName = panel.narration?.split(":")[0] || "Unknown";
+                    window.dispatchEvent(new CustomEvent("play_leitmotif", { detail: { characterName: charName.trim() } }));
+                };
+                utterance.onend = () => setIsSpeaking(false);
+                window.speechSynthesis.speak(utterance);
+                hasStartedNarration.current = true;
+            }, 800);
+            return () => clearTimeout(timeout);
+        }
+    }, [panel.narration, panel.audio_url, (panel as any).sfx_url, panel.is_loading, isMuted]);
+
+    // Visibility Cleanup
+    useEffect(() => {
+        return () => {
+            if (audioInstanceRef.current) {
+                audioInstanceRef.current.pause();
+                audioInstanceRef.current = null;
+            }
+        };
+    }, []);
 
     return (
         <div
             className={`card ${layoutClass}`}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
             style={{
                 position: "relative",
                 overflow: "hidden",
-                borderColor: isBranch ? "rgba(107,203,119,0.3)" : "var(--border-subtle)",
-                boxShadow: isBranch ? "0 0 20px rgba(107,203,119,0.1)" : "none",
-                minHeight: "200px",
+                borderColor: isBranch ? "rgba(107,203,119,0.3)" : "rgba(var(--gold-rgb), 0.1)",
+                boxShadow: isBranch ? "0 0 20px rgba(107,203,119,0.1)" : "0 20px 60px rgba(0,0,0,0.5)",
+                minHeight: "500px",
+                width: "min(95vw, 1000px)", // Larger width for vertical impact
+                aspectRatio: "21/9",
+                flexShrink: 0,
+                borderRadius: "4px",
+                border: "1px solid rgba(255,255,255,0.05)",
             }}
         >
+            {/* Cinematic Letterboxing (Top) */}
+            <motion.div
+                animate={{ height: theme.letterbox }}
+                transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
+                style={{
+                    position: "absolute",
+                    top: 0, left: 0, right: 0,
+                    background: "black",
+                    zIndex: 8,
+                }}
+            />
+
             {/* Branch tag */}
             {isBranch && (
                 <div
                     style={{
                         position: "absolute",
-                        top: "8px",
-                        left: "8px",
-                        zIndex: 5,
+                        top: "12%",
+                        left: "12px",
+                        zIndex: 12,
                         background: "rgba(107,203,119,0.2)",
                         border: "1px solid rgba(107,203,119,0.4)",
                         borderRadius: "var(--radius-pill)",
@@ -98,6 +188,8 @@ export default function StoryPanel({ panel, sessionId, onBranch, isBranch }: Sto
                         fontSize: "9px",
                         color: "#6BCB77",
                         letterSpacing: "0.1em",
+                        opacity: isHovered ? 1 : 0.6,
+                        transition: "opacity 0.4s ease",
                     }}
                 >
                     ⎇ BRANCH
@@ -105,153 +197,226 @@ export default function StoryPanel({ panel, sessionId, onBranch, isBranch }: Sto
             )}
 
             {/* Image & Animation Layers */}
-            {panel.is_loading && !panel.image_url ? (
-                <div className="shimmer" style={{ position: "absolute", inset: 0 }} />
-            ) : panel.image_url ? (
-                <SceneCanvas panel={panel} />
-            ) : null}
-
-            {/* Audio Controls */}
-            <div style={{ position: "absolute", top: "8px", left: isBranch ? "80px" : "8px", zIndex: 10 }}>
-                <button 
-                    className="btn-ghost"
-                    style={{ padding: "4px", background: "rgba(0,0,0,0.4)" }}
-                    onClick={() => {
-                        setIsMuted(!isMuted);
-                        if (!isMuted) window.speechSynthesis.cancel();
-                    }}
-                >
-                    {isMuted ? <VolumeOffIcon size={14} color="#E05252" /> : <VolumeHighIcon size={14} color="var(--gold-bright)" />}
-                </button>
-            </div>
-
-            {/* Bottom narration strip */}
-            <div
-                style={{
-                    position: "absolute",
-                    bottom: 0, left: 0, right: 0,
-                    zIndex: 3,
-                    background: "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 60%, transparent)",
-                    padding: "32px 16px 16px",
-                }}
-            >
-                {/* Panel ID + emotion badge */}
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
-                    <span
-                        style={{
-                            fontFamily: "var(--font-mono)",
-                            fontSize: "9px",
-                            color: "var(--gold-dim)",
-                            letterSpacing: "0.2em",
-                            textTransform: "uppercase",
-                        }}
-                    >
-                        {panel.id.toUpperCase()}
-                    </span>
-                    <span
-                        style={{
-                            fontFamily: "var(--font-mono)",
-                            fontSize: "9px",
-                            color: "var(--text-muted)",
-                            letterSpacing: "0.05em",
-                            textTransform: "uppercase",
-                        }}
-                    >
-                        {panel.emotion}
-                    </span>
-                </div>
-
-                {/* Narration */}
-                {panel.narration ? (
-                    <p
-                        style={{
-                            fontFamily: "var(--font-sans)",
-                            fontSize: "15px",
-                            lineHeight: 1.6,
-                            color: "var(--text-primary)",
-                            fontWeight: 500,
-                            textShadow: "0 1px 8px rgba(0,0,0,0.9)",
-                        }}
-                    >
-                        {panel.narration}
-                    </p>
-                ) : panel.is_loading ? (
-                    <div className="shimmer" style={{ height: "36px", borderRadius: "4px" }} />
+            <div className="scanline-container" style={{ position: "absolute", inset: 0 }}>
+                {panel.is_loading && !panel.image_url ? (
+                    <>
+                        <div className="shimmer" style={{ position: "absolute", inset: 0 }} />
+                        <div className="scanline" />
+                    </>
+                ) : panel.image_url ? (
+                    <SceneCanvas panel={panel} audioVibe={audioVibe} />
                 ) : null}
             </div>
 
-            {/* Branch button — top right */}
-            {onBranch && !isBranch && (
-                <div style={{ position: "absolute", top: "8px", right: "8px", zIndex: 10 }}>
-                    <button
-                        className="btn-ghost"
-                        style={{ padding: "5px 8px", fontSize: "11px" }}
-                        onClick={() => setShowBranchMenu(v => !v)}
-                    >
-                        <div className="icon-base icon-idle">
-                            <GitBranchIcon size={12} />
-                        </div>
-                        ⎇
-                    </button>
+            {/* Cinematic Letterboxing (Bottom) */}
+            <motion.div
+                animate={{ height: theme.letterbox }}
+                transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
+                style={{
+                    position: "absolute",
+                    bottom: 0, left: 0, right: 0,
+                    background: "black",
+                    zIndex: 8,
+                }}
+            />
 
-                    {showBranchMenu && (
-                        <div
-                            style={{
-                                position: "absolute",
-                                top: "100%",
-                                right: 0,
-                                marginTop: "4px",
-                                background: "var(--bg-card)",
-                                border: "1px solid var(--border-gold)",
-                                borderRadius: "var(--radius-md)",
-                                padding: "4px",
-                                minWidth: "160px",
-                                boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
-                                zIndex: 20,
-                            }}
-                            className="animate-scale-in"
-                        >
-                            {BRANCH_DIRECTIONS.map(dir => (
-                                <button
-                                    key={dir.key}
-                                    onClick={() => {
-                                        setShowBranchMenu(false);
-                                        onBranch(panel.id, dir.key);
-                                    }}
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: "8px",
-                                        width: "100%",
-                                        textAlign: "left",
-                                        padding: "8px 12px",
-                                        background: "transparent",
-                                        border: "none",
-                                        borderRadius: "var(--radius-sm)",
-                                        color: dir.color,
-                                        fontFamily: "var(--font-sans)",
-                                        fontSize: "12px",
-                                        cursor: "pointer",
-                                        transition: "background var(--transition-fast)",
-                                    }}
-                                    onMouseEnter={e => (e.currentTarget.style.background = "var(--bg-hover)")}
-                                    onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
-                                >
-                                    <dir.icon size={14} />
-                                    <span>{dir.label}</span>
-                                </button>
-                            ))}
-                        </div>
+            {/* HUD Layer — Glassmorphic & Adaptive */}
+            <div style={{ 
+                position: "absolute", 
+                inset: 0, 
+                zIndex: 10, 
+                opacity: isHovered || isSpeaking ? 1 : 0, 
+                transition: "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+                pointerEvents: (isHovered || isSpeaking) ? "auto" : "none" 
+            }}>
+                {/* Audio Controls */}
+                <div style={{ position: "absolute", top: "12%", left: isBranch ? "80px" : "12px", zIndex: 15 }}>
+                    <button 
+                        className="btn-ghost"
+                        style={{ 
+                            padding: "6px", 
+                            background: `rgba(${theme.r}, ${theme.g}, ${theme.b}, 0.2)`, 
+                            backdropFilter: "blur(12px)",
+                            borderRadius: "50%",
+                            border: `1px solid rgba(${theme.r}, ${theme.g}, ${theme.b}, 0.4)`
+                        }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsMuted(!isMuted);
+                            stopAllSpeech();
+                        }}
+                    >
+                        {isMuted ? <VolumeOffIcon size={14} color="#E05252" /> : <VolumeHighIcon size={14} color={`rgba(${theme.r}, ${theme.g}, ${theme.b}, 1)`} />}
+                    </button>
+                    
+                    {isSpeaking && (
+                        <motion.div 
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: [1, 1.2, 1], opacity: [0.6, 1, 0.6] }}
+                            transition={{ repeat: Infinity, duration: 1.5 }}
+                            style={{ 
+                                position: "absolute", 
+                                bottom: "-4px", 
+                                right: "-4px", 
+                                width: "10px", 
+                                height: "10px", 
+                                borderRadius: "50%", 
+                                background: "var(--color-gold)",
+                                border: "2px solid black"
+                            }} 
+                        />
                     )}
                 </div>
-            )}
+
+                {/* Reshoot / Retry Button (Top Right) */}
+                {(isImageFailed || !panel.image_url) && !panel.is_loading && (
+                    <div style={{ position: "absolute", top: "12%", right: "12px", zIndex: 15 }}>
+                         <button
+                            className="btn-gold"
+                            style={{ 
+                                padding: "6px 12px", 
+                                fontSize: "10px",
+                                background: "rgba(240, 98, 98, 0.2)",
+                                border: "1px solid rgba(240, 98, 98, 0.4)",
+                                color: "#F06262",
+                                backdropFilter: "blur(12px)"
+                            }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                // We call directorCut with this specific panel ID to trigger a reshoot
+                                if (sessionId) {
+                                    window.dispatchEvent(new CustomEvent("reshoot_panel", { 
+                                        detail: { panelId: panel.id } 
+                                    }));
+                                }
+                            }}
+                        >
+                            RE-SYNC IMAGE
+                        </button>
+                    </div>
+                )}
+
+                {/* Bottom narration strip — Glassmorphism */}
+                <div
+                    style={{
+                        position: "absolute",
+                        bottom: "12%", left: "12px", right: "12px",
+                        background: `rgba(${theme.r}, ${theme.g}, ${theme.b}, 0.05)`,
+                        backdropFilter: "blur(16px)",
+                        border: `1px solid rgba(${theme.r}, ${theme.g}, ${theme.b}, 0.2)`,
+                        padding: "16px",
+                        borderRadius: "8px",
+                        transform: isSpeaking && !isHovered ? "translateY(5px)" : "none",
+                        transition: "all 0.4s ease"
+                    }}
+                >
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
+                        <span style={{ fontFamily: "var(--font-mono)", fontSize: "9px", color: `rgba(${theme.r}, ${theme.g}, ${theme.b}, 0.8)`, letterSpacing: "0.2em", textTransform: "uppercase" }}>
+                            {panel.id.toUpperCase()}
+                        </span>
+                        <span style={{ fontFamily: "var(--font-mono)", fontSize: "9px", color: "var(--text-muted)", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                            {panel.emotion}
+                        </span>
+                        {isSpeaking && (
+                            <span style={{ marginLeft: "auto", display: "flex", gap: "2px" }}>
+                                {[1,2,3].map(i => (
+                                    <motion.div 
+                                        key={i}
+                                        animate={{ height: [4, 10, 4] }}
+                                        transition={{ repeat: Infinity, duration: 0.8, delay: i * 0.2 }}
+                                        style={{ width: "2px", background: "var(--color-gold)", borderRadius: "1px" }}
+                                    />
+                                ))}
+                            </span>
+                        )}
+                    </div>
+
+                    {panel.narration && (
+                        <p className="h2-cinema" style={{ 
+                            fontSize: "20px", 
+                            lineHeight: 1.4, 
+                            color: "var(--text-primary)", 
+                            margin: 0,
+                            textShadow: "0 2px 10px rgba(0,0,0,0.8)"
+                         }}>
+                            {panel.narration}
+                        </p>
+                    )}
+                </div>
+
+                {/* Branch button — top right */}
+                {onBranch && !isBranch && (
+                    <div style={{ position: "absolute", top: "12%", right: "12px" }}>
+                        <button
+                            className="btn-ghost"
+                            style={{ 
+                                padding: "5px 10px", 
+                                fontSize: "11px", 
+                                background: `rgba(${theme.r}, ${theme.g}, ${theme.b}, 0.2)`,
+                                backdropFilter: "blur(12px)",
+                                border: `1px solid rgba(${theme.r}, ${theme.g}, ${theme.b}, 0.4)`
+                            }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowBranchMenu(v => !v);
+                            }}
+                        >
+                            ⎇
+                        </button>
+
+                        {showBranchMenu && (
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    top: "100%",
+                                    right: 0,
+                                    marginTop: "8px",
+                                    background: "rgba(10, 10, 10, 0.9)",
+                                    backdropFilter: "blur(20px)",
+                                    border: "1px solid var(--border-gold)",
+                                    borderRadius: "var(--radius-md)",
+                                    padding: "4px",
+                                    minWidth: "160px",
+                                    boxShadow: "0 12px 40px rgba(0,0,0,0.8)",
+                                    zIndex: 20,
+                                }}
+                                className="animate-scale-in"
+                            >
+                                {BRANCH_DIRECTIONS.map(dir => (
+                                    <button
+                                        key={dir.key}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setShowBranchMenu(false);
+                                            onBranch(panel.id, dir.key);
+                                        }}
+                                        style={{
+                                            display: "flex", alignItems: "center", gap: "8px", width: "100%", textAlign: "left", padding: "8px 12px", background: "transparent", border: "none", borderRadius: "var(--radius-sm)", color: dir.color, fontFamily: "var(--font-sans)", fontSize: "12px", cursor: "pointer"
+                                        }}
+                                    >
+                                        <dir.icon size={14} />
+                                        <span>{dir.label}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
+
+            {/* Side numbering (35mm film feel) */}
+            <div style={{ 
+                position: "absolute", left: "6px", top: "50%", transform: "translateY(-50%)", 
+                writingMode: "vertical-rl", fontSize: "10px", color: "rgba(255,255,255,0.1)", 
+                fontFamily: "var(--font-mono)", letterSpacing: "0.4em" 
+            }}>
+                35MM FILM • KODAK 5219
+            </div>
 
             <style>{`
-        @keyframes rain-fall {
-          from { background-position: 0 0; }
-          to { background-position: 0 4px; }
-        }
-      `}</style>
+                .card { transition: transform 0.4s ease; }
+                .card:hover { transform: scale(1.02); }
+            `}</style>
         </div>
     );
 }

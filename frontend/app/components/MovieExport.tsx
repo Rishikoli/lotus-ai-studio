@@ -7,13 +7,13 @@ import { Download01Icon, RefreshIcon, Tv01Icon as MovieIcon, Tick01Icon } from "
 import { StoryPanel } from "../types";
 
 const SFX_ASSETS: Record<string, string> = {
-    thunder: "https://www.soundjay.com/nature/thunder-01.mp3",
-    heartbeat: "https://www.soundjay.com/human/heartbeat-01.mp3",
-    explosion: "https://www.soundjay.com/mechanical/explosion-01.mp3",
-    whoosh: "https://www.soundjay.com/button/button-09.mp3",
-    glitch: "https://www.soundjay.com/button/button-10.mp3",
-    rain_patter: "https://www.soundjay.com/nature/rain-01.mp3",
-    wind_howl: "https://www.soundjay.com/nature/wind-01.mp3",
+    thunder: "https://actions.google.com/sounds/v1/weather/thunder_crack.mp3",
+    heartbeat: "https://actions.google.com/sounds/v1/foley/heartbeat.mp3",
+    explosion: "https://actions.google.com/sounds/v1/foley/explosion.mp3",
+    whoosh: "https://actions.google.com/sounds/v1/foley/whoosh.mp3",
+    glitch: "https://actions.google.com/sounds/v1/foley/glitch_error.mp3",
+    rain_patter: "https://actions.google.com/sounds/v1/weather/rain_on_roof.mp3",
+    wind_howl: "https://actions.google.com/sounds/v1/weather/wind_howl.mp3",
 };
 
 const VIBE_ASSETS: Record<string, string> = {
@@ -75,8 +75,10 @@ export default function MovieExport({ panels, sessionId, vibe }: MovieExportProp
                 "bg_music_8d.mp3"
             ]);
 
+            const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+            const FALLBACK_IMG_URL = "/lotus-animated.svg"; // Fallback static asset
             const inputFiles: string[] = [];
-            
+
             for (let i = 0; i < panels.length; i++) {
                 const panel = panels[i];
                 const imgName = `img${i}.jpg`;
@@ -85,11 +87,40 @@ export default function MovieExport({ panels, sessionId, vibe }: MovieExportProp
                 const vidName = `part${i}.mp4`;
 
                 // Fetch image and narration
-                const imgData = await fetchFile(panel.image_url!);
-                await ffmpeg.writeFile(imgName, imgData);
+                let imgData, audData;
 
-                const audData = await fetchFile(panel.audio_url!);
-                await ffmpeg.writeFile(audName, audData);
+                // Helper to resolve URLs
+                const getAssetUrl = (url: string) => {
+                    if (!url) return "";
+                    return url.startsWith("/") ? `${API_URL}${url}` : url;
+                };
+
+                try {
+                    // Try preferred image, fallback to lotus branding if fails
+                    const targetUrl = getAssetUrl(panel.image_url || "");
+                    try {
+                        imgData = await fetchFile(targetUrl);
+                    } catch (fetchErr) {
+                        console.warn(`Panel ${i} image fetch failed, using brand fallback.`, fetchErr);
+                        imgData = await fetchFile(FALLBACK_IMG_URL);
+                    }
+                    await ffmpeg.writeFile(imgName, imgData);
+                } catch (e) {
+                    console.error(`Critical image failure for panel ${i}:`, e);
+                    continue; 
+                }
+
+                try {
+                    const audUrl = getAssetUrl(panel.audio_url || "");
+                    if (!audUrl) throw new Error("No audio URL");
+                    audData = await fetchFile(audUrl);
+                    await ffmpeg.writeFile(audName, audData);
+                } catch (e) {
+                    console.error(`Failed to fetch audio for panel ${i}:`, e);
+                    // Create a silent audio track fallback if audio missing
+                    // This prevents FFmpeg from crashing on missing streams
+                    await ffmpeg.exec(["-f", "lavfi", "-i", "anullsrc=r=44100:cl=mono", "-t", "5", audName]);
+                }
                 
                 // Fetch SFX if exists
                 let hasSfx = false;
