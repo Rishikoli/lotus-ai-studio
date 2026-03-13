@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 import { Download01Icon, RefreshIcon, Tv01Icon as MovieIcon, Tick01Icon } from "hugeicons-react";
@@ -36,15 +36,45 @@ export default function MovieExport({ panels, sessionId, vibe }: MovieExportProp
     const [progress, setProgress] = useState(0);
     const ffmpegRef = useRef(new FFmpeg());
 
+    // Manage FFmpeg listeners in a lifecycle-safe way
+    useEffect(() => {
+        const ffmpeg = ffmpegRef.current;
+        
+        const logHandler = ({ message }: { message: string }) => {
+            console.log("FFmpeg Raw Log:", message);
+        };
+
+        const progressHandler = ({ progress: rawProgress }: { progress: number }) => {
+            // Robust progress calculation:
+            // 1. Some versions report 0-1, others might report frame counts or 0-100.
+            // 2. We normalize and clamp strictly to 0-100 range.
+            let normalized = rawProgress;
+            if (normalized > 1.1) {
+                // If the value is large, it's likely already a percentage (0-100)
+                // we divide by 100 to get back to our 0-1 basis for clamping
+                normalized = normalized / 100;
+            }
+            const clamped = Math.min(Math.max(normalized, 0), 1);
+            setProgress(Math.round(clamped * 100));
+        };
+
+        ffmpeg.on("log", logHandler);
+        ffmpeg.on("progress", progressHandler);
+
+        return () => {
+            // Clean up if component unmounts
+            try {
+                ffmpeg.off("log", logHandler);
+                ffmpeg.off("progress", progressHandler);
+            } catch (e) {
+                console.warn("FFmpeg off failed:", e);
+            }
+        };
+    }, []);
+
     const loadFFmpeg = async () => {
         const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
         const ffmpeg = ffmpegRef.current;
-        ffmpeg.on("log", ({ message }) => {
-            console.log("FFmpeg:", message);
-        });
-        ffmpeg.on("progress", ({ progress }) => {
-            setProgress(Math.round(progress * 100));
-        });
         await ffmpeg.load({
             coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
             wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
