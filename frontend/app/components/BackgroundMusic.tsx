@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { Music, VolumeX, Volume2, Play, Pause, RotateCcw, Activity } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -30,19 +31,72 @@ export default function BackgroundMusic({ vibe, ambientMusicUrl, isGenerating }:
     const [duration, setDuration] = useState(0);
     const [hasInteracted, setHasInteracted] = useState(false);
 
+    const analyzerRef = useRef<AnalyserNode | null>(null);
+    const audioContextRef = useRef<AudioContext | null>(null);
+    const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
+    const animationFrameRef = useRef<number | null>(null);
+
     useEffect(() => {
         const handleInteraction = () => {
             setHasInteracted(true);
+            if (!audioContextRef.current) {
+                audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+            }
+            if (audioContextRef.current.state === 'suspended') {
+                audioContextRef.current.resume();
+            }
             window.removeEventListener("click", handleInteraction);
         };
         window.addEventListener("click", handleInteraction);
-        return () => window.removeEventListener("click", handleInteraction);
+        return () => {
+            window.removeEventListener("click", handleInteraction);
+            if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+        };
     }, []);
+
+    const startAnalysis = () => {
+        if (!audioRef.current || !audioContextRef.current || analyzerRef.current) return;
+        
+        const ctx = audioContextRef.current;
+        const analyzer = ctx.createAnalyser();
+        analyzer.fftSize = 256;
+        analyzerRef.current = analyzer;
+
+        const source = ctx.createMediaElementSource(audioRef.current);
+        source.connect(analyzer);
+        analyzer.connect(ctx.destination);
+        sourceRef.current = source;
+
+        const bufferLength = analyzer.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+
+        const updateEnergy = () => {
+            analyzer.getByteFrequencyData(dataArray);
+            
+            // Calculate energy bands
+            let low = 0, mid = 0, high = 0;
+            const third = Math.floor(bufferLength / 3);
+            
+            for (let i = 0; i < third; i++) low += dataArray[i];
+            for (let i = third; i < 2 * third; i++) mid += dataArray[i];
+            for (let i = 2 * third; i < bufferLength; i++) high += dataArray[i];
+            
+            (window as any).__LOTUS_AUDIO_ENERGY__ = {
+                low: (low / third) / 255,
+                mid: (mid / third) / 255,
+                high: (high / third) / 255
+            };
+
+            animationFrameRef.current = requestAnimationFrame(updateEnergy);
+        };
+        updateEnergy();
+    };
 
     useEffect(() => {
         if (!audioRef.current) {
             audioRef.current = new Audio();
             audioRef.current.loop = true;
+            audioRef.current.crossOrigin = "anonymous";
             
             audioRef.current.ontimeupdate = () => {
                 if (audioRef.current) setCurrentTime(audioRef.current.currentTime);
@@ -50,7 +104,10 @@ export default function BackgroundMusic({ vibe, ambientMusicUrl, isGenerating }:
             audioRef.current.onloadedmetadata = () => {
                 if (audioRef.current) setDuration(audioRef.current.duration);
             };
-            audioRef.current.onplay = () => setIsPlaying(true);
+            audioRef.current.onplay = () => {
+                setIsPlaying(true);
+                startAnalysis();
+            };
             audioRef.current.onpause = () => setIsPlaying(false);
         }
 

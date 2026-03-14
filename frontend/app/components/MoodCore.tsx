@@ -42,7 +42,7 @@ export default function MoodCore({ vibe, stems, leitmotifs, currentEmotion, isGe
         ...stems
     };
 
-    const { play, pause, toggleMute, setStemIntensity, playLeitmotif, playSpatialSound, isPlaying, isMuted } = useAudioEngine(effectiveStems, vibe);
+    const { play, pause, toggleMute, setStemIntensity, playLeitmotif, playSpatialSound, getAudioEnergy, isPlaying, isMuted } = useAudioEngine(effectiveStems, vibe);
     const [hasInteracted, setHasInteracted] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 
@@ -61,6 +61,20 @@ export default function MoodCore({ vibe, stems, leitmotifs, currentEmotion, isGe
             play();
         }
     }, [hasInteracted, isGenerating, vibe, stems, isPlaying, play]);
+
+    // Drive global energy from useAudioEngine
+    useEffect(() => {
+        if (!isPlaying) return;
+        
+        let frame: number;
+        const tick = () => {
+            getAudioEnergy();
+            frame = requestAnimationFrame(tick);
+        };
+        tick();
+        
+        return () => cancelAnimationFrame(frame);
+    }, [isPlaying, getAudioEnergy]);
 
     // Dynamic Stem Mixing Logic
     useEffect(() => {

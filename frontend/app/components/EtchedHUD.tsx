@@ -30,28 +30,30 @@ export default function EtchedHUD({ vibe }: EtchedHUDProps) {
         const render = () => {
             ctx.clearRect(0, 0, width, height);
             
+            const energy = (window as any).__LOTUS_AUDIO_ENERGY__ || { low: 0, mid: 0, high: 0 };
+            const lowImpact = energy.low * 60; // Bass drives amplitude
+            const midImpact = energy.mid * 20;
+            
             // Draw thin golden waveform
             ctx.beginPath();
-            ctx.strokeStyle = "rgba(201, 168, 76, 0.4)";
-            ctx.lineWidth = 1.5;
-            ctx.shadowBlur = 15;
+            ctx.strokeStyle = `rgba(201, 168, 76, ${0.4 + energy.low * 0.4})`;
+            ctx.lineWidth = 1.5 + (energy.low * 2);
+            ctx.shadowBlur = 15 + (energy.low * 20);
             ctx.shadowColor = "rgba(201, 168, 76, 0.8)";
             
             ctx.moveTo(0, height / 2);
             
-            // We use a multi-sine wave to simulate audio intensity
-            // In a future step, this can be hooked into an AnalyserNode
             for (let x = 0; x < width; x += 5) {
-                const multiFactor = vibe ? 1.5 : 0.4;
-                const dynamicY = Math.sin(x * 0.01 + phase) * 15 * multiFactor + 
-                                Math.sin(x * 0.02 - phase * 0.5) * 8 * multiFactor;
+                const multiFactor = vibe ? 1.5 : 0.6;
+                const dynamicY = Math.sin(x * 0.01 + phase) * (15 + lowImpact) * multiFactor + 
+                                Math.sin(x * 0.02 - phase * 0.5) * (8 + midImpact) * multiFactor;
                 
                 ctx.lineTo(x, height / 2 + dynamicY);
             }
             
             ctx.stroke();
             
-            phase += vibe ? 0.05 : 0.02;
+            phase += 0.02 + (energy.low * 0.1); // Speed up on bass
             requestRef.current = requestAnimationFrame(render);
         };
 
