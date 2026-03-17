@@ -77,11 +77,8 @@ export default function DirectorHotline({ sessionId, isGenerating, onInterrupt }
                         style={{
                             width: "320px",
                             padding: "20px",
-                            border: "1px solid var(--gold-bright)",
-                            boxShadow: "0 20px 50px rgba(0,0,0,0.5), 0 0 20px rgba(201,168,76,0.2)",
-                            background: "rgba(10,10,10,0.95)",
-                            backdropFilter: "blur(20px)",
-                            borderRadius: "var(--radius-lg)",
+                            border: "1px solid rgba(201, 168, 76, 0.4)",
+                            boxShadow: "0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(201,168,76,0.15)",
                         }}
                     >
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
@@ -114,8 +111,8 @@ export default function DirectorHotline({ sessionId, isGenerating, onInterrupt }
                                         style={{
                                             width: "100%",
                                             height: "100px",
-                                            background: "rgba(255,255,255,0.05)",
-                                            border: "1px solid rgba(255,255,255,0.1)",
+                                            background: "rgba(0,0,0,0.4)",
+                                            border: "1px solid rgba(201, 168, 76, 0.2)",
                                             borderRadius: "var(--radius-md)",
                                             padding: "12px",
                                             color: "white",
@@ -123,7 +120,10 @@ export default function DirectorHotline({ sessionId, isGenerating, onInterrupt }
                                             resize: "none",
                                             outline: "none",
                                             fontFamily: "var(--font-sans)",
+                                            transition: "border-color 0.3s ease",
                                         }}
+                                        onFocus={(e) => e.target.style.borderColor = "var(--gold-primary)"}
+                                        onBlur={(e) => e.target.style.borderColor = "rgba(201, 168, 76, 0.2)"}
                                     />
                                     <button 
                                         onClick={toggleListening}
@@ -131,11 +131,11 @@ export default function DirectorHotline({ sessionId, isGenerating, onInterrupt }
                                             position: "absolute", 
                                             bottom: "8px", 
                                             right: "8px", 
-                                            background: isListening ? "var(--color-error)" : "rgba(255,255,255,0.1)", 
-                                            border: "1px solid rgba(255,255,255,0.1)",
+                                            background: isListening ? "var(--color-error)" : "rgba(201, 168, 76, 0.1)", 
+                                            border: "1px solid rgba(201, 168, 76, 0.2)",
                                             borderRadius: "4px",
-                                            padding: "4px",
-                                            color: isListening ? "white" : "rgba(255,255,255,0.5)",
+                                            padding: "4px 8px",
+                                            color: isListening ? "white" : "var(--gold-dim)",
                                             cursor: "pointer",
                                             display: "flex",
                                             alignItems: "center",

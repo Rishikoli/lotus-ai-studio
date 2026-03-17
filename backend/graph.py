@@ -839,17 +839,17 @@ async def _generate_panel_sfx(state: StudioState, panel: dict) -> str:
     cue = panel.get("sfx_cue", "").lower()
     if not cue: return ""
     
-    # Cinematic SFX Mapping
+    # Cinematic SFX Mapping (GCS Bridged for CORS compliance)
     sfx_map = {
-        "thunder": "https://actions.google.com/sounds/v1/weather/thunder_crack.mp3",
-        "explosion": "https://actions.google.com/sounds/v1/foley/explosion.mp3",
-        "heartbeat": "https://actions.google.com/sounds/v1/ambient/fast_paced_heartbeat.mp3",
-        "whoosh": "https://actions.google.com/sounds/v1/foley/quick_whoosh.mp3",
-        "glitch": "https://actions.google.com/sounds/v1/horror/classic_ghost_glitch.mp3",
-        "rain_patter": "https://actions.google.com/sounds/v1/weather/rain_on_roof.mp3",
-        "wind_howl": "https://actions.google.com/sounds/v1/weather/wind_howl.mp3",
-        "metal_clank": "https://actions.google.com/sounds/v1/foley/metal_clank.mp3",
-        "glass_break": "https://actions.google.com/sounds/v1/foley/glass_shatter.mp3"
+        "thunder": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/thunder.mp3",
+        "explosion": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/explosion.mp3",
+        "heartbeat": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/heartbeat.mp3",
+        "whoosh": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/whoosh.mp3",
+        "glitch": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_3.mp3",
+        "rain_patter": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_1.mp3",
+        "wind_howl": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_2.mp3",
+        "metal_clank": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/explosion.mp3",
+        "glass_break": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/thunder.mp3"
     }
     
     return sfx_map.get(cue, "")
@@ -866,7 +866,7 @@ async def _generate_panel_image(state: StudioState, panel: dict, narration: str)
     try:
         import asyncio
         # Load Imagen 3 model
-        model = ImageGenerationModel.from_pretrained("imagen-3.0-generate-001")
+        model = ImageGenerationModel.from_pretrained("imagen-3.0-fast-generate-001")
         
         # Retry logic for Vertex AI Imagen
         max_retries = 3

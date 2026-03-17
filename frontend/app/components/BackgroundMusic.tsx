@@ -3,17 +3,17 @@ import { Music, VolumeX, Volume2, Play, Pause, RotateCcw, Activity } from "lucid
 import { motion, AnimatePresence } from "motion/react";
 
 const VIBE_ASSETS: Record<string, string> = {
-    dark_synth: "https://actions.google.com/sounds/v1/ambient/dark_synth_loop.mp3",
-    epic_orchestral: "https://actions.google.com/sounds/v1/ambient/epic_heroic_loop.mp3",
-    lofi_mystery: "https://actions.google.com/sounds/v1/ambient/mystery_ambience.mp3",
-    horror_ambient: "https://actions.google.com/sounds/v1/ambient/horror_drone.mp3",
-    adventurous_folk: "https://actions.google.com/sounds/v1/ambient/acoustic_travel.mp3",
-    classical_baroque: "https://actions.google.com/sounds/v1/ambient/church_bells_ambient.mp3",
-    classical_romantic: "https://actions.google.com/sounds/v1/ambient/meditation_bell.mp3",
-    classical_avantgarde: "https://actions.google.com/sounds/v1/ambient/horror_wind_tunnel.mp3",
-    cyberpunk_industrial: "https://actions.google.com/sounds/v1/ambient/metal_impact_echo.mp3",
-    ethereal_zen: "https://actions.google.com/sounds/v1/ambient/crystal_cave.mp3",
-    default: "https://actions.google.com/sounds/v1/ambient/ambient_hum.mp3",
+    dark_synth: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_1.mp3",
+    epic_orchestral: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_2.mp3",
+    lofi_mystery: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_3.mp3",
+    horror_ambient: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_1.mp3",
+    adventurous_folk: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_2.mp3",
+    classical_baroque: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_3.mp3",
+    classical_romantic: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_1.mp3",
+    classical_avantgarde: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_2.mp3",
+    cyberpunk_industrial: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_3.mp3",
+    ethereal_zen: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_1.mp3",
+    default: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_1.mp3",
 };
 
 interface BackgroundMusicProps {

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { StoryPanel as StoryPanelType } from "../types";
-import { motion, useAnimation } from "motion/react";
+import { motion, useAnimation, AnimatePresence } from "motion/react";
 
 const EMOTION_OVERLAYS: Record<string, string> = {
     tense: "radial-gradient(ellipse at center, transparent 60%, rgba(100,60,0,0.4))",
@@ -10,6 +10,7 @@ const EMOTION_OVERLAYS: Record<string, string> = {
     peak_fear: "radial-gradient(ellipse at center, rgba(224,82,82,0.15), rgba(0,0,0,0.5))",
     revelation: "radial-gradient(ellipse at top, rgba(201,168,76,0.3), transparent 70%)",
     hopeful: "radial-gradient(ellipse at top, rgba(212,168,67,0.2), transparent 80%)",
+    determined: "linear-gradient(to bottom, rgba(201,168,76,0.05), transparent 50%)",
     resolved: "none",
     calm: "none",
     comedic: "none",
@@ -29,7 +30,7 @@ const VIBE_FILTERS: Record<string, string> = {
     default: "none",
 };
 
-export default function SceneCanvas({ panel, audioVibe }: { panel: StoryPanelType, audioVibe?: string | null }) {
+export default function SceneCanvas({ panel, audioVibe, isGenerating }: { panel: StoryPanelType, audioVibe?: string | null, isGenerating?: boolean }) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -56,7 +57,7 @@ export default function SceneCanvas({ panel, audioVibe }: { panel: StoryPanelTyp
                 repeat: isDolbyZoom ? 0 : Infinity,
                 repeatType: "reverse"
             }
-        });
+        } as any);
     }, [panel.image_url, panel.emotion, isDolbyZoom, controls]);
 
     // 2. High-Frequency Resonance Engine (Shake, Aberration, Flicker)
@@ -83,7 +84,23 @@ export default function SceneCanvas({ panel, audioVibe }: { panel: StoryPanelTyp
                 const pX = mousePos.x * -20;
                 const pY = mousePos.y * -20;
                 el.style.transform = `translate3d(${pX + shakeX}px, ${pY + shakeY}px, 0)`;
-                el.style.filter = `${isAberration ? "url(#chromatic-aberration)" : ""} ${audioVibe ? (VIBE_FILTERS[audioVibe] || "") : ""} brightness(${pulse}) contrast(${contrastPulse})`.trim();
+                
+                // Visual Warp (Director Distortion) + Vibe Filters
+                const warpScale = isGenerating ? 1 + (energy.high * 0.05) : 1;
+                const warpBlur = isGenerating ? energy.mid * 10 : 0;
+                const warpSaturate = isGenerating ? 1 + (energy.low * 2) : 1;
+                
+                el.style.filter = `
+                    ${isAberration ? "url(#chromatic-aberration)" : ""} 
+                    ${audioVibe ? (VIBE_FILTERS[audioVibe] || "") : ""} 
+                    brightness(${pulse}) 
+                    contrast(${contrastPulse})
+                    blur(${warpBlur}px)
+                    saturate(${warpSaturate})
+                `.trim();
+                if (isGenerating) {
+                    el.style.transform += ` scale(${warpScale})`;
+                }
 
                 // Melodic Aberration (Mid/High)
                 if (isAberration) {
@@ -315,11 +332,23 @@ export default function SceneCanvas({ panel, audioVibe }: { panel: StoryPanelTyp
                             objectFit: "cover",
                         }}
                     />
+                ) : panel.image_url ? (
+                    <SceneCanvas panel={panel} audioVibe={audioVibe} isGenerating={panel.is_loading} />
                 ) : (
                     <motion.img
                         src={panel.image_url}
                         alt={`Panel ${panel.id}`}
-                        animate={controls}
+                        initial={{ scale: 1.5, opacity: 0, filter: "brightness(2) contrast(2)" }}
+                        animate={{ 
+                            ...controls, 
+                            opacity: 1, 
+                            filter: "brightness(1) contrast(1)",
+                            transition: {
+                                opacity: { duration: 0.8 },
+                                filter: { duration: 1.2 },
+                                ...controls.transition
+                            }
+                        }}
                         crossOrigin="anonymous"
                         style={{
                             width: "100%",
@@ -329,6 +358,25 @@ export default function SceneCanvas({ panel, audioVibe }: { panel: StoryPanelTyp
                     />
                 )}
             </motion.div>
+
+            {/* Cinematic Shutter Effect (only when complete) */}
+            <AnimatePresence>
+                {panel.is_complete && (
+                    <motion.div
+                        initial={{ scaleY: 1 }}
+                        animate={{ scaleY: 0 }}
+                        exit={{ scaleY: 1 }}
+                        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                        style={{
+                            position: "absolute",
+                            inset: 0,
+                            background: "var(--color-bg)",
+                            zIndex: 10,
+                            transformOrigin: "top"
+                        }}
+                    />
+                )}
+            </AnimatePresence>
 
             {/* Cinematic Depth of Field Overlay (only for video) */}
             {panel.video_url && (

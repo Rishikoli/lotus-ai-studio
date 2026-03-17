@@ -36,9 +36,9 @@ export default function Navbar({ sessionId }: NavbarProps) {
                 alignItems: "center",
                 justifyContent: "space-between",
                 padding: "0 32px",
-                background: "rgba(8, 8, 8, 0.85)",
-                borderBottom: "1px solid var(--border-subtle)",
-                backdropFilter: "blur(20px) saturate(1.5)",
+                background: "rgba(8, 8, 8, 0.4)",
+                borderBottom: "1px solid rgba(201, 168, 76, 0.15)",
+                backdropFilter: "blur(24px) saturate(180%)",
             }}
         >
             {/* Logo */}

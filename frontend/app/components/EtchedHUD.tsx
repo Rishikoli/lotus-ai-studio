@@ -81,7 +81,9 @@ export default function EtchedHUD({ vibe }: EtchedHUDProps) {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                overflow: "hidden"
+                overflow: "hidden",
+                background: "linear-gradient(to top, rgba(8, 8, 8, 0.8), transparent)",
+                backdropFilter: "blur(4px)",
             }}
         >
             <canvas 

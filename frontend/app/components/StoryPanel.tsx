@@ -301,13 +301,14 @@ export default function StoryPanel({ panel, sessionId, audioVibe, onBranch, isBr
                     style={{
                         position: "absolute",
                         bottom: "12%", left: "12px", right: "12px",
-                        background: `rgba(${theme.r}, ${theme.g}, ${theme.b}, 0.05)`,
-                        backdropFilter: "blur(16px)",
-                        border: `1px solid rgba(${theme.r}, ${theme.g}, ${theme.b}, 0.2)`,
-                        padding: "16px",
-                        borderRadius: "8px",
+                        background: `rgba(${theme.r}, ${theme.g}, ${theme.b}, 0.08)`,
+                        backdropFilter: "blur(24px) saturate(160%)",
+                        border: `1px solid rgba(201, 168, 76, 0.2)`,
+                        padding: "20px",
+                        borderRadius: "12px",
+                        boxShadow: "0 10px 30px rgba(0,0,0,0.6)",
                         transform: isSpeaking && !isHovered ? "translateY(5px)" : "none",
-                        transition: "all 0.4s ease"
+                        transition: "all 0.5s cubic-bezier(0.22, 1, 0.36, 1)"
                     }}
                 >
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>

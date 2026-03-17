@@ -737,7 +737,14 @@ h2, .h2-cinema {
 
 /* ─── Utility overrides ───────────────────────────────────────────────────────── */
 .backdrop-blur-premium {
-    backdrop-filter: blur(20px) saturate(1.5);
+    backdrop-filter: blur(24px) saturate(180%);
+}
+
+.glass-panel {
+    background: rgba(11, 11, 11, 0.4);
+    backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(201, 168, 76, 0.2);
+    border-radius: var(--radius-lg);
 }
 
 .border-gold {

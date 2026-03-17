@@ -7,22 +7,22 @@ import { Download01Icon, RefreshIcon, Tv01Icon as MovieIcon, Tick01Icon } from "
 import { StoryPanel } from "../types";
 
 const SFX_ASSETS: Record<string, string> = {
-    thunder: "https://actions.google.com/sounds/v1/weather/thunder_crack.mp3",
-    heartbeat: "https://actions.google.com/sounds/v1/foley/heartbeat.mp3",
-    explosion: "https://actions.google.com/sounds/v1/foley/explosion.mp3",
-    whoosh: "https://actions.google.com/sounds/v1/foley/whoosh.mp3",
-    glitch: "https://actions.google.com/sounds/v1/foley/glitch_error.mp3",
-    rain_patter: "https://actions.google.com/sounds/v1/weather/rain_on_roof.mp3",
-    wind_howl: "https://actions.google.com/sounds/v1/weather/wind_howl.mp3",
+    thunder: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/thunder.mp3",
+    heartbeat: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/heartbeat.mp3",
+    explosion: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/explosion.mp3",
+    whoosh: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/whoosh.mp3",
+    glitch: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_3.mp3", // Substitute
+    rain_patter: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_1.mp3", // Substitute
+    wind_howl: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_2.mp3", // Substitute
 };
 
 const VIBE_ASSETS: Record<string, string> = {
-    dark_synth: "https://actions.google.com/sounds/v1/ambient/dark_synth_loop.mp3",
-    epic_orchestral: "https://actions.google.com/sounds/v1/ambient/epic_heroic_loop.mp3",
-    lofi_mystery: "https://actions.google.com/sounds/v1/ambient/mystery_ambience.mp3",
-    horror_ambient: "https://actions.google.com/sounds/v1/ambient/horror_drone.mp3",
-    adventurous_folk: "https://actions.google.com/sounds/v1/ambient/acoustic_travel.mp3",
-    default: "https://actions.google.com/sounds/v1/ambient/ambient_hum.mp3",
+    dark_synth: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_1.mp3",
+    epic_orchestral: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_2.mp3",
+    lofi_mystery: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_3.mp3",
+    horror_ambient: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_1.mp3",
+    adventurous_folk: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_2.mp3",
+    default: "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_1.mp3",
 };
 
 interface MovieExportProps {

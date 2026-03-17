@@ -108,29 +108,39 @@ graph TD
 
 ---
 
-## 🚀 Reprodubility (Spin-up Instructions)
-**Judges: Follow these steps to replicate the Lotus AI Studio environment.**
+## 🚀 Deployment (Cloud Run)
+Lotus AI Studio is optimized for **Google Cloud Run**, providing a fully serverless, pay-as-you-go infrastructure.
 
-### 1. Backend Environment
-1.  **GCP Service Account**: Ensure you have a service account with `Vertex AI Administrator` and `Firestore User` roles.
-2.  **Environment Variables**: Create `backend/.env` with:
-    - `GOOGLE_CLOUD_PROJECT`: Your project ID.
-    - `GEMINI_API_KEY`: A valid Gemini 1.5/2.0 API key.
-    - `INTERNAL_API_KEY`: (Optional) For secure SSE streaming.
-3.  **Run**:
+### 1. Cost Efficiency & Pay-As-You-Go
+To keep costs low while maintaining peak performance:
+- **Serverless Scaling**: Individual services scale to zero when not in use.
+- **Vertex AI Optimization**: Uses **Gemini 2.0 Flash** for high-speed, low-cost multimodal orchestration.
+- **Quota Management**: Integrated guards prevent runaway generation costs.
+- **Estimated Dev Cost**: ~$0.00 - $15.00/month (covered by GCP $300 Free Trial).
+
+### 2. Spin-up Instructions
+
+#### Backend (Cloud Run)
+1.  **Secrets**: Store `GEMINI_API_KEY` and `INTERNAL_API_KEY` in **GCP Secret Manager**.
+2.  **Containerize**:
     ```bash
     cd backend
-    pip install -r requirements.txt
-    python main.py  # Starts on port 8000
+    gcloud builds submit --tag gcr.io/[PROJECT_ID]/lotus-backend
+    ```
+3.  **Deploy**:
+    ```bash
+    gcloud run deploy lotus-backend --image gcr.io/[PROJECT_ID]/lotus-backend --platform managed
     ```
 
-### 2. Frontend Environment
-1.  **Next.js Config**: Set `NEXT_PUBLIC_API_URL=http://localhost:8000` in `frontend/.env.local`.
-2.  **Run**:
+#### Frontend (Cloud Run)
+1.  **Build**:
     ```bash
     cd frontend
-    npm install
-    npm run dev  # Starts on port 3000
+    gcloud builds submit --tag gcr.io/[PROJECT_ID]/lotus-frontend
+    ```
+2.  **Deploy**:
+    ```bash
+    gcloud run deploy lotus-frontend --image gcr.io/[PROJECT_ID]/lotus-frontend --set-env-vars NEXT_PUBLIC_API_URL=[BACKEND_URL]
     ```
 
 ---

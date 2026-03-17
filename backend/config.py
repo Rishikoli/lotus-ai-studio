@@ -18,7 +18,7 @@ REDIS_PORT        = int(os.getenv("REDIS_PORT", "6379"))
 REDIS_TTL         = 3600  # 1 hour
 
 # ─── Google Cloud ──────────────────────────────────────────────────────────────
-GCS_BUCKET            = os.getenv("GCS_BUCKET", "lotus-studio-media")
+GCS_BUCKET            = os.getenv("GCS_BUCKET", "lotus-studio-media-489706")
 FIRESTORE_DEMO_USER   = os.getenv("FIRESTORE_DEMO_USER_ID", "demo_user")
 
 # ─── Pipeline Templates ────────────────────────────────────────────────────────

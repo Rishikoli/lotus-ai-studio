@@ -129,11 +129,12 @@ export default function InterrogationTerminal({
             {/* Terminal Header */}
             <div style={{
                 padding: "16px 24px",
-                background: "rgba(201,168,76,0.1)",
-                borderBottom: "1px solid var(--gold-dim)",
+                background: "rgba(201,168,76,0.15)",
+                borderBottom: "1px solid rgba(201,168,76,0.3)",
                 display: "flex",
                 justifyContent: "space-between",
-                alignItems: "center"
+                alignItems: "center",
+                backdropFilter: "blur(10px)",
             }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                     <CharacterIcon size={20} className="text-gold" />
@@ -221,14 +222,17 @@ export default function InterrogationTerminal({
                             placeholder={`Type your message to ${characterName}...`}
                             style={{
                                 flex: 1,
-                                background: "rgba(255,255,255,0.03)",
-                                border: "1px solid rgba(255,255,255,0.1)",
+                                background: "rgba(0,0,0,0.4)",
+                                border: "1px solid rgba(201,168,76,0.2)",
                                 borderRadius: "8px",
                                 padding: "12px 16px",
                                 color: "#fff",
                                 fontSize: "14px",
-                                outline: "none"
+                                outline: "none",
+                                transition: "all 0.3s ease",
                             }}
+                            onFocus={(e) => e.target.style.borderColor = "var(--gold-primary)"}
+                            onBlur={(e) => e.target.style.borderColor = "rgba(201, 168, 76, 0.2)"}
                         />
                         <button 
                             onClick={handleSend}
@@ -254,12 +258,13 @@ export default function InterrogationTerminal({
                 {/* Sidebar: Influence & Outcomes */}
                 <div style={{ 
                     width: "300px", 
-                    background: "rgba(10,10,10,0.8)", 
-                    borderLeft: "1px solid var(--gold-dim)",
+                    background: "rgba(11, 11, 11, 0.5)", 
+                    borderLeft: "1px solid rgba(201, 168, 76, 0.2)",
                     display: "flex",
                     flexDirection: "column",
                     padding: "24px",
-                    gap: "24px"
+                    gap: "24px",
+                    backdropFilter: "blur(10px)",
                 }}>
                     <div style={{ textAlign: "center" }}>
                         <ChatIcon size={32} className="text-gold-dim" style={{ marginBottom: "12px" }} />

@@ -35,3 +35,6 @@ Thumbs.db
 # Project specific
 backend/.env
 frontend/.env.local
+
+# Logs
+backend/backend.log

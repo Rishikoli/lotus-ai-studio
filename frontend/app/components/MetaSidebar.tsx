@@ -38,11 +38,13 @@ export default function MetaSidebar({ logs, isOpen }: MetaSidebarProps) {
                 bottom: 0,
                 width: "360px",
                 height: "calc(100vh - 70px)",
-                background: "rgba(11, 11, 11, 0.95)",
-                borderLeft: "1px solid var(--border-subtle)",
+                background: "rgba(11, 11, 11, 0.4)",
+                backdropFilter: "blur(24px) saturate(180%)",
+                borderLeft: "1px solid rgba(201, 168, 76, 0.2)",
                 top: "70px",
                 flexDirection: "column",
                 zIndex: 90,
+                boxShadow: "-10px 0 50px rgba(0,0,0,0.5)",
             }}
         >
             {/* Header */}

@@ -18,21 +18,20 @@ interface MoodCoreProps {
 
 const VIBE_ASSETS: Record<string, Record<string, string>> = {
     "dark_synth": {
-        "ambient": "https://storage.googleapis.com/lotus-studio-assets/audio/loop_synth_ambient.mp3",
-        "rhythm": "https://storage.googleapis.com/lotus-studio-assets/audio/loop_synth_rhythm.mp3",
-        "melody": "https://storage.googleapis.com/lotus-studio-assets/audio/loop_synth_melody.mp3"
+        "ambient": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_1.mp3",
+        "rhythm": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/thunder.mp3",
+        "melody": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_3.mp3"
     },
     "epic_orchestral": {
-        "ambient": "https://storage.googleapis.com/lotus-studio-assets/audio/loop_epic_ambient.mp3",
-        "rhythm": "https://storage.googleapis.com/lotus-studio-assets/audio/loop_epic_rhythm.mp3",
-        "melody": "https://storage.googleapis.com/lotus-studio-assets/audio/loop_epic_melody.mp3"
+        "ambient": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_2.mp3",
+        "rhythm": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/explosion.mp3",
+        "melody": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/whoosh.mp3"
     },
     "classical_romantic": {
-        "ambient": "https://storage.googleapis.com/lotus-studio-assets/audio/loop_classical_ambient.mp3",
-        "rhythm": "https://storage.googleapis.com/lotus-studio-assets/audio/loop_classical_rhythm.mp3",
-        "melody": "https://storage.googleapis.com/lotus-studio-assets/audio/loop_classical_melody.mp3"
-    },
-    // Add other fallbacks if needed
+        "ambient": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_3.mp3",
+        "rhythm": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/heartbeat.mp3",
+        "melody": "https://storage.googleapis.com/lotus-studio-media-489706/assets/audio/ambient_2.mp3"
+    }
 };
 
 export default function MoodCore({ vibe, stems, leitmotifs, currentEmotion, isGenerating, onVibeChange }: MoodCoreProps) {
